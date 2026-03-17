@@ -1,0 +1,1500 @@
+<meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>Indicadores SAR y TOPS</title
+><!-- Estilos --><link rel="stylesheet" href="IndicadoresMensuales.en-US.customcss.css" /><!-- Librerías de charts -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+<div class="sars-dashboard" style="padding-top: 30px; padding-right: 30px; padding-bottom: 30px; padding-left: 30px;">
+  <h1 class="dashboard-title" style="margin-top: 0px; margin-right: 0px; margin-left: 0px; display: flex; align-items: center; row-gap: 12px; column-gap: 12px; text-shadow: rgba(0, 0, 0, 0.3) 1px 2px 5px; animation-duration: 1s; animation-timing-function: ease-out; animation-delay: 0s; animation-iteration-count: 1; animation-direction: normal; animation-fill-mode: none; animation-play-state: running; animation-name: fadeIn; animation-timeline: auto; animation-range-start: normal; animation-range-end: normal; font-size: 32px; font-weight: 800; color: var(--color-primary); margin-bottom: 25px; letter-spacing: -0.4px;">Indicadores SAR Y TOPS</h1>
+  <div class="dashboard-container" style="display: grid; grid-template-columns: 280px 1fr; row-gap: 30px; column-gap: 30px;">
+    <aside class="dashboard-filters" style="padding-top: 22px; padding-right: 22px; padding-bottom: 22px; padding-left: 22px; box-shadow: var(--shadow-md);">
+      <div class="filter-group" style="margin-bottom: 20px;">
+        <label for="anio" style="font-weight: 700; display: block; margin-bottom: 8px; color: var(--color-primary); font-size: 14px;">Año</label
+        ><select id="anio" multiple="" style="width: 100%; height: 130px; padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; background-image: initial; background-position-x: initial; background-position-y: initial; background-size: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: white; font-size: 14px; outline-color: initial; outline-style: none; outline-width: initial; transition-behavior: normal, normal; transition-duration: 0.2s, 0.2s; transition-timing-function: ease, ease; transition-delay: 0s, 0s; transition-property: border-color, box-shadow;">
+          <option value="2025" selected="">2025</option>
+          <option value="2026">2026</option>
+        </select>
+      </div>
+      <div class="filter-group" style="margin-bottom: 20px;">
+        <label for="mes" style="font-weight: 700; display: block; margin-bottom: 8px; color: var(--color-primary); font-size: 14px;">Mes</label
+        ><select id="mes" multiple="" style="width: 100%; height: 130px; padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; background-image: initial; background-position-x: initial; background-position-y: initial; background-size: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: white; font-size: 14px; outline-color: initial; outline-style: none; outline-width: initial; transition-behavior: normal, normal; transition-duration: 0.2s, 0.2s; transition-timing-function: ease, ease; transition-delay: 0s, 0s; transition-property: border-color, box-shadow;">
+          <option value="enero">Enero</option>
+          <option value="febrero">Febrero</option>
+          <option value="marzo">Marzo</option>
+          <option value="abril">Abril</option>
+          <option value="mayo">Mayo</option>
+          <option value="junio">Junio</option>
+          <option value="julio">Julio</option>
+          <option value="agosto">Agosto</option>
+          <option value="septiembre">Septiembre</option>
+          <option value="octubre">Octubre</option>
+          <option value="noviembre">Noviembre</option>
+          <option value="diciembre">Diciembre</option>
+        </select>
+      </div>
+      <div class="filter-group" style="margin-bottom: 20px;">
+        <label for="indicador" style="font-weight: 700; display: block; margin-bottom: 8px; color: var(--color-primary); font-size: 14px;">Indicador</label
+        ><select id="indicador" multiple="" style="width: 100%; height: 130px; padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; background-image: initial; background-position-x: initial; background-position-y: initial; background-size: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: white; font-size: 14px; outline-color: initial; outline-style: none; outline-width: initial; transition-behavior: normal, normal; transition-duration: 0.2s, 0.2s; transition-timing-function: ease, ease; transition-delay: 0s, 0s; transition-property: border-color, box-shadow;">
+          <option value="oportunidad_transcripcion_reconocimiento" selected="">Oportunidad Transcripción Reconocimiento</option>
+          <option value="calidad_transcripcion" selected="">Calidad Transcripción</option>
+          <option value="oportunidad_transcripcion" selected="">Oportunidad Transcripción</option>
+          <option value="calidad_liquidacion" selected="">Calidad Liquidación</option>
+          <option value="oportunidad_liquidacion" selected="">Oportunidad Liquidación</option>
+          <option value="recuperacion_licencias" selected="">Recuperación Licencias</option>
+          <option value="oportunidad_licencia_adres" selected="">Oportunidad Licencia ADRES</option>
+          <option value="calidad_pda" selected="">Calidad PDA</option>
+          <option value="oportunidad_pda" selected="">Oportunidad PDA</option>
+        </select>
+      </div>
+      <div class="filter-buttons" style="display: flex; row-gap: 10px; column-gap: 10px;"><button type="button" id="applyFilter" class="btn-primary" style="flex-grow: 1; flex-shrink: 1; flex-basis: 0%; padding-top: 12px; padding-right: 12px; padding-bottom: 12px; padding-left: 12px; border-top-width: initial; border-right-width: initial; border-bottom-width: initial; border-left-width: initial; border-top-style: none; border-right-style: none; border-bottom-style: none; border-left-style: none; border-top-color: initial; border-right-color: initial; border-bottom-color: initial; border-left-color: initial; border-image-source: initial; border-image-slice: initial; border-image-width: initial; border-image-outset: initial; border-image-repeat: initial; font-weight: 700; cursor: pointer; transition-behavior: normal; transition-duration: 0.2s; transition-timing-function: ease; transition-delay: 0s; transition-property: all; font-size: 14px; color: white;">Aplicar</button><button type="button" id="resetFilter" class="btn-secondary" style="flex-grow: 1; flex-shrink: 1; flex-basis: 0%; padding-top: 12px; padding-right: 12px; padding-bottom: 12px; padding-left: 12px; border-top-width: initial; border-right-width: initial; border-bottom-width: initial; border-left-width: initial; border-top-style: none; border-right-style: none; border-bottom-style: none; border-left-style: none; border-top-color: initial; border-right-color: initial; border-bottom-color: initial; border-left-color: initial; border-image-source: initial; border-image-slice: initial; border-image-width: initial; border-image-outset: initial; border-image-repeat: initial; font-weight: 700; cursor: pointer; transition-behavior: normal; transition-duration: 0.2s; transition-timing-function: ease; transition-delay: 0s; transition-property: all; font-size: 14px; background-image: initial; background-position-x: initial; background-position-y: initial; background-size: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(226, 232, 240); color: rgb(15, 23, 42);">Restablecer</button></div>
+    </aside>
+    <section class="dashboard-content" style="display: flex; flex-direction: column; row-gap: 25px; column-gap: 25px;">
+      <div class="kpi-row" style="display: grid; grid-template-columns: repeat(4, 1fr); row-gap: 18px; column-gap: 18px;">
+        <div id="kpiPeriodo" class="kpi-card" style="background-image: initial; background-position-x: initial; background-position-y: initial; background-size: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: white; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px; box-shadow: var(--shadow-md); transition-behavior: normal; transition-duration: 0.2s; transition-timing-function: ease; transition-delay: 0s; transition-property: transform;"><span class="kpi-label" style="font-size: 12px; text-transform: uppercase; color: var(--color-muted); font-weight: 700; margin-bottom: 4px; letter-spacing: 0.4px;">Periodo</span><span class="kpi-value" style="font-size: 28px; font-weight: 800; color: var(--color-primary);">—</span></div>
+        <div id="kpiResultado" class="kpi-card" style="background-image: initial; background-position-x: initial; background-position-y: initial; background-size: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: white; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px; box-shadow: var(--shadow-md); transition-behavior: normal; transition-duration: 0.2s; transition-timing-function: ease; transition-delay: 0s; transition-property: transform;"><span class="kpi-label" style="font-size: 12px; text-transform: uppercase; color: var(--color-muted); font-weight: 700; margin-bottom: 4px; letter-spacing: 0.4px;">Resultado Promedio</span><span class="kpi-value" style="font-size: 28px; font-weight: 800; color: var(--color-primary);">—</span></div>
+        <div id="kpiMeta" class="kpi-card" style="background-image: initial; background-position-x: initial; background-position-y: initial; background-size: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: white; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px; box-shadow: var(--shadow-md); transition-behavior: normal; transition-duration: 0.2s; transition-timing-function: ease; transition-delay: 0s; transition-property: transform;"><span class="kpi-label" style="font-size: 12px; text-transform: uppercase; color: var(--color-muted); font-weight: 700; margin-bottom: 4px; letter-spacing: 0.4px;">Meta Promedio</span><span class="kpi-value" style="font-size: 28px; font-weight: 800; color: var(--color-primary);">—</span></div>
+        <div id="kpiEstatus" class="kpi-card" style="background-image: initial; background-position-x: initial; background-position-y: initial; background-size: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: white; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px; box-shadow: var(--shadow-md); transition-behavior: normal; transition-duration: 0.2s; transition-timing-function: ease; transition-delay: 0s; transition-property: transform;"><span class="kpi-label" style="font-size: 12px; text-transform: uppercase; color: var(--color-muted); font-weight: 700; margin-bottom: 4px; letter-spacing: 0.4px;">Estatus</span><span class="kpi-value" style="font-size: 28px; font-weight: 800; color: var(--color-primary);">—</span></div>
+      </div>
+      <div class="card" style="background-image: initial; background-position-x: initial; background-position-y: initial; background-size: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: white; padding-top: 28px; padding-right: 28px; padding-bottom: 28px; padding-left: 28px; box-shadow: var(--shadow-lg);">
+        <h3 id="chartTitle" style="margin-top: 0px; margin-bottom: 12px; color: rgb(15, 23, 42);">Visualización</h3>
+        <canvas id="mainChart" style="width: 100%; display: block; height: 500px;"></canvas>
+      </div>
+    </section>
+  </div>
+</div>
+<!-- Lógica -->
+<script src="IndicadoresMensuales.en-US.customjs.js"></script>
+<div class="row sectionBlockLayout text-start" style="display: flex; flex-wrap: wrap; margin: 0px; min-height: auto; padding: 8px;">
+  <div class="container" style="padding: 0px; display: flex; flex-wrap: wrap;"><div class="col-lg-12 columnBlockLayout" style="flex-grow: 1; display: flex; flex-direction: column; min-width: 250px;"></div></div>
+</div>
+
+<script>
+/* ====== REGISTROS GLOBALES ====== */
+Chart.register(ChartDataLabels);
+
+/* Aguja para tacómetro: se registra una sola vez y solo dibuja en doughnut */
+const needlePlugin = {
+  id: "needle",
+  afterDraw(chart, args, pluginOptions) {
+    if (chart.config.type !== "doughnut") return;
+
+    const meta0 = chart.getDatasetMeta(0);
+    if (!meta0 || !meta0.data || !meta0.data[0]) return;
+
+    const { value = 0, meta = 0 } = pluginOptions || {};
+    const v = Math.max(0, Math.min(100, Number(value)));
+
+    const cx = meta0.data[0].x;
+    const cy = meta0.data[0].y;
+    const { ctx, chartArea } = chart;
+
+    const radius = Math.min(
+      (chartArea.right - chartArea.left),
+      (chartArea.bottom - chartArea.top)
+    ) / 2;
+
+    // Ángulo (180° → 0..100)
+    const angle = Math.PI + (v / 100) * Math.PI;
+
+    // Aguja
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(angle);
+    ctx.beginPath();
+    ctx.moveTo(0, -4);
+    ctx.lineTo(radius * 0.75, 0);
+    ctx.lineTo(0, 4);
+    ctx.fillStyle = "#111";
+    ctx.fill();
+    ctx.restore();
+
+    // Pivote
+    ctx.beginPath();
+    ctx.arc(cx, cy, 7, 0, 2 * Math.PI);
+    ctx.fillStyle = "#111";
+    ctx.fill();
+
+    // Texto
+    ctx.font = "700 28px Inter, Segoe UI, sans-serif";
+    ctx.fillStyle = v >= meta ? "#16a34a" : "#dc2626";
+    ctx.textAlign = "center";
+    ctx.fillText(`${v.toFixed(1)}%`, cx, cy - 22);
+
+    ctx.font = "500 14px Inter, Segoe UI, sans-serif";
+    ctx.fillStyle = "#334155";
+    ctx.fillText(`Meta: ${meta}%`, cx, cy + 12);
+  }
+};
+Chart.register(needlePlugin);
+
+/* ===========================
+   CONFIGURACIÓN BASE
+=========================== */
+
+const meses = [
+  "enero","febrero","marzo","abril","mayo","junio",
+  "julio","agosto","septiembre","octubre","noviembre","diciembre"
+];
+
+/* 🔧 FIX: Unificamos 2025 + 2026 bajo cada indicador para no sobrescribir. */
+const indicadores = {
+  oportunidad_transcripcion_reconocimiento: {
+    nombre: "Oportunidad Transcripción Reconocimiento",
+    resultado: {
+      "2025": {
+        enero: 99.48, febrero: 99.68, marzo: 99.90, abril: 99.60, mayo: 49.60, junio: 31.96,
+        julio: 30, agosto: 46, septiembre: 99.60, octubre: 100, noviembre: 99.99, diciembre: 99.99
+      },
+      "2026": {
+        enero: 99.98, febrero: 0, marzo: 0, abril: 0, mayo: 0, junio: 0,
+        julio: 0, agosto: 0, septiembre: 0, octubre: 0, noviembre: 0, diciembre: 0
+      }
+    },
+    meta: 98
+  },
+
+  calidad_transcripcion: {
+    nombre: "Calidad Transcripción",
+    resultado: {
+      "2025": {
+        enero: 95.59, febrero: 96.92, marzo: 96.99, abril: 97.10, mayo: 88.50, junio: 89.16,
+        julio: 86.85, agosto: 90.50, septiembre: 93.39, octubre: 93.74, noviembre: 95.72, diciembre: 96.39
+      },
+      "2026": {
+        enero: 97.32, febrero: 0, marzo: 0, abril: 0, mayo: 0, junio: 0,
+        julio: 0, agosto: 0, septiembre: 0, octubre: 0, noviembre: 0, diciembre: 0
+      }
+    },
+    meta: 93
+  },
+
+  oportunidad_transcripcion: {
+    nombre: "Oportunidad Transcripción",
+    resultado: {
+      "2025": {
+        enero: 99.26, febrero: 99.60, marzo: 99.11, abril: 99.50, mayo: 20.7, junio: 10.70,
+        julio: 11.30, agosto: 33.50, septiembre: 99.47, octubre: 100, noviembre: 99.99, diciembre: 99.99
+      },
+      "2026": {
+        enero: 99.97, febrero: 0, marzo: 0, abril: 0, mayo: 0, junio: 0,
+        julio: 0, agosto: 0, septiembre: 0, octubre: 0, noviembre: 0, diciembre: 0
+      }
+    },
+    meta: 98
+  },
+
+  calidad_liquidacion: {
+    nombre: "Calidad Liquidación",
+    resultado: {
+      "2025": {
+        enero: 99.30, febrero: 98.70, marzo: 98.24, abril: 99.20, mayo: 98.80, junio: 98.62,
+        julio: 98.90, agosto: 98.90, septiembre: 98.78, octubre: 98.51, noviembre: 98.40, diciembre: 98.60
+      },
+      "2026": {
+        enero: 99.45, febrero: 0, marzo: 0, abril: 0, mayo: 0, junio: 0,
+        julio: 0, agosto: 0, septiembre: 0, octubre: 0, noviembre: 0, diciembre: 0
+      }
+    },
+    meta: 97
+  },
+
+  oportunidad_liquidacion: {
+    nombre: "Oportunidad Liquidación",
+    resultado: {
+      "2025": {
+        enero: 100, febrero: 100, marzo: 99.10, abril: 99.99, mayo: 100, junio: 100,
+        julio: 100, agosto: 100, septiembre: 100, octubre: 100, noviembre: 100, diciembre: 100
+      },
+      "2026": {
+        enero: 100, febrero: 0, marzo: 0, abril: 0, mayo: 0, junio: 0,
+        julio: 0, agosto: 0, septiembre: 0, octubre: 0, noviembre: 0, diciembre: 0
+      }
+    },
+    meta: 96
+  },
+
+  recuperacion_licencias: {
+    nombre: "Recuperación Licencias",
+    resultado: {
+      "2025": {
+        enero: 99.27, febrero: 99.30, marzo: 98.80, abril: 99.40, mayo: 99.10, junio: 99.21,
+        julio: 99.30, agosto: 99.70, septiembre: 99.43, octubre: 99.20, noviembre: 99.41, diciembre: 99.08
+      },
+      "2026": {
+        enero: 99.34, febrero: 0, marzo: 0, abril: 0, mayo: 0, junio: 0,
+        julio: 0, agosto: 0, septiembre: 0, octubre: 0, noviembre: 0, diciembre: 0
+      }
+    },
+    meta: 97
+  },
+
+  oportunidad_licencia_adres: {
+    nombre: "Oportunidad Licencia ADRES",
+    resultado: {
+      "2025": {
+        enero: 99.14, febrero: 99.50, marzo: 99.80, abril: 99.30, mayo: 99.60, junio: 99.90,
+        julio: 99.60, agosto: 99.30, septiembre: 99.24, octubre: 98.94, noviembre: 99.78, diciembre: 99.72
+      },
+      "2026": {
+        enero: 99.68, febrero: 0, marzo: 0, abril: 0, mayo: 0, junio: 0,
+        julio: 0, agosto: 0, septiembre: 0, octubre: 0, noviembre: 0, diciembre: 0
+      }
+    },
+    meta: 98
+  },
+
+  calidad_pda: {
+    nombre: "Calidad PDA",
+    resultado: {
+      "2025": {
+        enero: 96.80, febrero: 95.40, marzo: 94.17, abril: 96.20, mayo: 95.4, junio: 98.39,
+        julio: 97.50, agosto: 98.10, septiembre: 95.56, octubre: 95.04, noviembre: 96.04, diciembre: 96.04
+      },
+      "2026": {
+        enero: 96.30, febrero: 0, marzo: 0, abril: 0, mayo: 0, junio: 0,
+        julio: 0, agosto: 0, septiembre: 0, octubre: 0, noviembre: 0, diciembre: 0
+      }
+    },
+    meta: 94
+  },
+
+  oportunidad_pda: {
+    nombre: "Oportunidad PDA",
+    resultado: {
+      "2025": {
+        enero: 100, febrero: 100, marzo: 100, abril: 100, mayo: 100, junio: 100,
+        julio: 100, agosto: 100, septiembre: 100, octubre: 100, noviembre: 100, diciembre: 100
+      },
+      "2026": {
+        enero: 100, febrero: 0, marzo: 0, abril: 0, mayo: 0, junio: 0,
+        julio: 0, agosto: 0, septiembre: 0, octubre: 0, noviembre: 0, diciembre: 0
+      }
+    },
+    meta: 99.7
+  }
+};
+
+let chart;
+
+/* ===========================
+   UTILIDADES
+=========================== */
+
+function getSelected(id){
+  return Array.from(document.getElementById(id).selectedOptions).map(o => o.value);
+}
+
+function destroyChart(){
+  if(chart){
+    chart.destroy();
+    chart = null;
+  }
+}
+
+const percentFormatter = (v) => (v == null || isNaN(v) ? "" : `${Number(v).toFixed(0)}%`);
+
+/* ===========================
+   DASHBOARD PRINCIPAL
+=========================== */
+
+function actualizarDashboard(){
+  const anios = getSelected("anio");
+  const mesesSel = getSelected("mes");
+  const inds = getSelected("indicador");
+
+  if(!anios.length || !inds.length) return;
+
+  destroyChart();
+
+  const canvas = document.getElementById("mainChart");
+
+  if(anios.length === 1 && mesesSel.length === 1 && inds.length === 1){
+    crearTacometro(anios[0], mesesSel[0], inds[0], canvas);
+  }else if(anios.length === 1 && mesesSel.length === 0){
+    crearBarrasComparativas(anios[0], inds, canvas);
+  }else{
+    crearLineaTendencia(anios[0], mesesSel, inds, canvas);
+  }
+
+  calcularKPIs(anios[0], mesesSel, inds);
+}
+
+/* ===========================
+   TACÓMETRO PROFESIONAL
+=========================== */
+function crearTacometro(anio, mes, ind, canvas) {
+
+  document.getElementById("chartTitle").innerText = "Indicador del período";
+
+  const info = indicadores[ind];
+  let valor = info?.resultado?.[anio]?.[mes] ?? 0;
+  let meta = info?.meta ?? 100;
+
+  valor = Number(valor) || 0;
+  meta = Number(meta) || 100;
+
+  // 🔹 Variación mes anterior
+  const indexMes = meses.indexOf(mes);
+  let valorAnteriorMes = null;
+
+  if (indexMes > 0) {
+    const mesAnterior = meses[indexMes - 1];
+    valorAnteriorMes = info?.resultado?.[anio]?.[mesAnterior] ?? null;
+  }
+
+  const variacionMes = valorAnteriorMes != null
+    ? valor - Number(valorAnteriorMes)
+    : null;
+
+  // 🔹 Variación mismo mes año anterior
+  const anioAnterior = String(Number(anio) - 1);
+  const valorAnioAnterior = info?.resultado?.[anioAnterior]?.[mes] ?? null;
+
+  const variacionAnual = valorAnioAnterior != null
+    ? valor - Number(valorAnioAnterior)
+    : null;
+
+  if (chart) chart.destroy();
+
+  const cumple = valor >= meta;
+
+  const ctx = canvas.getContext("2d");
+
+  // 🎨 Gradiente moderno
+  const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
+
+  if (cumple) {
+    gradient.addColorStop(0, "#0d9488");
+    gradient.addColorStop(1, "#0f766e");
+  } else {
+    gradient.addColorStop(0, "#ef4444");
+    gradient.addColorStop(1, "#b91c1c");
+  }
+
+  chart = new Chart(canvas, {
+    type: "bar",
+    data: {
+      labels: [""],
+      datasets: [{
+        data: [valor],
+        borderRadius: 40,
+        backgroundColor: gradient,
+        barThickness: 65
+      }]
+    },
+    options: {
+      indexAxis: "y",
+      responsive: true,
+      maintainAspectRatio: false,
+      layout: {
+        padding: { top: 170, right: 25, left: 25 }
+      },
+      scales: {
+        x: {
+          min: 0,
+          max: 100,
+          grid: {
+            color: "#e5e7eb",
+            drawBorder: false
+          },
+          ticks: {
+            color: "#64748b",
+            font: { size: 12 },
+            callback: (value) => value + "%"
+          }
+        },
+        y: { display: false }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: { enabled: false }
+      },
+      animation: {
+        duration: 1200,
+        easing: "easeOutQuart"
+      }
+    },
+    plugins: [
+
+      // 🎯 Línea de META
+      {
+        id: "metaLine",
+        afterDraw(chart) {
+          const { ctx, chartArea: { top, bottom }, scales: { x } } = chart;
+          const metaX = x.getPixelForValue(meta);
+
+          ctx.save();
+
+          ctx.beginPath();
+          ctx.setLineDash([5, 5]);
+          ctx.moveTo(metaX, top);
+          ctx.lineTo(metaX, bottom);
+          ctx.lineWidth = 2;
+          ctx.strokeStyle = "#1f2937";
+          ctx.stroke();
+
+          ctx.setLineDash([]);
+          ctx.font = "600 13px Inter, sans-serif";
+          ctx.fillStyle = "#1f2937";
+          ctx.textAlign = "center";
+          ctx.fillText(`Meta ${meta}%`, metaX, top - 10);
+
+          ctx.restore();
+        }
+      },
+
+      // 💎 KPI Ejecutivo Superior
+      {
+        id: "kpiLabel",
+        afterDraw(chart) {
+
+          const { ctx, chartArea: { left, right, top } } = chart;
+          const centerX = (left + right) / 2;
+
+          ctx.save();
+
+          // 🔢 Número principal
+          const numeroY = top - 70;
+
+          ctx.font = "800 54px Inter, sans-serif";
+          ctx.fillStyle = cumple ? "#0f766e" : "#b91c1c";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText(`${valor.toFixed(2)}%`, centerX, numeroY);
+
+          // 🔽 Variaciones debajo
+          let yPos = numeroY + 38;
+
+          function dibujarVariacion(texto, variacion, colorPos, colorNeg) {
+            if (variacion == null) return;
+
+            let simbolo = "●";
+            let color = "#94a3b8";
+
+            if (variacion > 0) {
+              simbolo = "▲";
+              color = colorPos;
+            } else if (variacion < 0) {
+              simbolo = "▼";
+              color = colorNeg;
+            }
+
+            ctx.font = "500 14px Inter, sans-serif";
+            ctx.fillStyle = color;
+            ctx.fillText(
+              `${simbolo} ${Math.abs(variacion).toFixed(2)}% ${texto}`,
+              centerX,
+              yPos
+            );
+
+            yPos += 22;
+          }
+
+          dibujarVariacion("vs mes anterior", variacionMes, "#16a34a", "#dc2626");
+          dibujarVariacion("vs año anterior", variacionAnual, "#2563eb", "#b91c1c");
+
+          ctx.restore();
+        }
+      }
+    ]
+  });
+
+  mostrarModalImpactante(Number(valor), Number(meta), anio, mes, ind);
+}
+
+
+
+/* ===========================
+   BARRAS COMPARATIVAS
+=========================== */
+
+function crearBarrasComparativas(anio, inds, canvas, mesesSel = []) {
+  document.getElementById("chartTitle").innerText = "Resultado vs Meta por Mes";
+
+  const ctx = canvas.getContext("2d");
+  const datasets = [];
+
+  const mesesParaMeta = meses; // siempre todos los meses para etiquetas y meta
+  const mesesParaLabels = mesesParaMeta; // etiquetas fijas
+
+  // Para resultado, si hay meses filtrados, dejamos null en los meses no seleccionados para que no se muestren puntos
+  const mesesParaResultados = mesesParaMeta.map(m => {
+    return mesesSel.length === 0 || mesesSel.includes(m) ? m : null;
+  });
+
+  inds.forEach((ind, i) => {
+    const resultadoColorStart = "#0078d4";
+    const resultadoColorEnd = "#00b0f0";
+    const metaColor = "#f2f2f2";
+
+    const gradResultado = ctx.createLinearGradient(0, 0, canvas.width, 0);
+    gradResultado.addColorStop(0, resultadoColorStart);
+    gradResultado.addColorStop(1, resultadoColorEnd);
+
+    // Dataset Resultado con valores solo para meses seleccionados, null para otros
+    const resultadoData = mesesParaMeta.map(m =>
+      mesesSel.length === 0 || mesesSel.includes(m)
+        ? indicadores[ind].resultado[anio]?.[m] ?? null
+        : null
+    );
+
+    datasets.push({
+      label: `${indicadores[ind].nombre} - Resultado`,
+      data: resultadoData,
+      borderColor: gradResultado,
+      backgroundColor: "transparent",
+      borderWidth: 3,
+      tension: 0.4,
+      pointRadius: 6,
+      pointHoverRadius: 8,
+      pointBackgroundColor: resultadoColorStart,
+      pointBorderColor: "#ffffff",
+      pointBorderWidth: 2,
+      order: 1
+    });
+
+    // Dataset Meta siempre con todos los meses
+    datasets.push({
+      label: `${indicadores[ind].nombre} - Meta`,
+      data: mesesParaMeta.map(() => indicadores[ind].meta),
+      borderColor: metaColor,
+      backgroundColor: "transparent",
+      borderWidth: 2,
+      borderDash: [6, 4],
+      pointRadius: 0,
+      tension: 0.4,
+      order: 2
+    });
+  });
+
+  // Crear gráfico
+  chart = new Chart(canvas, {
+    type: "line",
+    data: {
+      labels: mesesParaLabels, // etiquetas fijas
+      datasets
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          display:false,
+          suggestedMin: 0,
+          suggestedMax: 100,
+          ticks: {
+            callback: (v) => `${v}%`,
+            color: "#0f172a",
+            font: { weight: "600" }
+          },
+          grid: { color: "rgba(0,0,0,0.05)" }
+        },
+        x: {
+          ticks: { color: "#0f172a", font: { weight: "600" } },
+          grid: { display: false }
+        }
+      },
+      plugins: {
+        legend: {display:false,
+          position: "bottom",
+          labels: { color: "#1e3a8a", font: { weight: "600" } }
+        },
+        tooltip: {
+          mode: "nearest",
+          intersect: false,
+          padding: 10,
+          backgroundColor: "rgba(30, 58, 138, 0.9)",
+          titleColor: "#ffffff",
+          bodyColor: "#ffffff",
+          cornerRadius: 8,
+          callbacks: {
+            label: (ctx) => `${ctx.dataset.label}: ${percentFormatter(ctx.parsed.y)}`
+          }
+        },
+        datalabels: {
+          display: true,
+          color: "#0f172a",
+          font: { weight: "700", size: 12 },
+          clip: false,
+          backgroundColor: 'rgba(255,255,255,0.7)',
+          borderRadius: 4,
+          padding: 4,
+          align: 'center',
+          anchor: 'center',
+          formatter: function(value, context) {
+            if (context.dataset.label.includes("Meta")) {
+              return `${Number(context.dataset.data[context.dataIndex] || 0).toFixed(0)}%`;
+            }
+            return value != null ? `${Number(value).toFixed(0)}%` : "";
+          }
+        }
+      },
+      animation: {
+        duration: 1200,
+        easing: 'easeOutQuart'
+      }
+    },
+    plugins: [ChartDataLabels]
+  });
+}
+
+
+
+/* ===========================
+   LÍNEA PREMIUM
+=========================== */
+
+function crearLineaTendencia(anio, mesesSel, inds, canvas) {
+  document.getElementById("chartTitle").innerText = "Tendencia Indicador";
+
+  const labels = mesesSel?.length ? mesesSel : meses;
+  const ctx = canvas.getContext("2d");
+  const palette = ["#0078d4", "#16a34a", "#f59e0b", "#8b5cf6", "#ef4444", "#0ea5e9"];
+
+  const datasets = inds.flatMap((ind, i) => {
+    const color = palette[i % palette.length];
+
+    // Gradiente
+    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height || 400);
+    gradient.addColorStop(0, hexToRgba(color, 0.45));
+    gradient.addColorStop(1, hexToRgba(color, 0.08));
+
+    // RESULTADOS: asumo 0–100
+    const valores = labels.map(m => indicadores[ind].resultado[anio]?.[m] ?? null);
+
+    // META: normalizo a 0–100 si viene en 0–1
+    const metaBruta = indicadores[ind].meta;          // puede ser 0.95 ó 95
+    const metaEscala100 = metaBruta <= 1 ? metaBruta * 100 : metaBruta;
+
+    return [
+      {
+        label: indicadores[ind].nombre,
+        data: valores,
+        borderColor: color,
+        backgroundColor: gradient,
+        fill: true,
+        tension: 0.38,
+        pointRadius: 4,
+        pointHoverRadius: 7
+      },
+      {
+        label: `Meta ${indicadores[ind].nombre}`,
+        data: labels.map(() => metaEscala100),
+        borderColor: "#1e293b",
+        borderDash: [5, 5],
+        fill: false,
+        pointRadius: 0,
+        tension: 0
+      }
+    ];
+  });
+
+  chart = new Chart(canvas, {
+    type: "line",
+    data: { labels, datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          // aunque lo ocultes, fija límites para que no “aplasten” las líneas
+          display: false,
+          suggestedMin: 80,   // ajusta si necesitas
+          suggestedMax: 102,  // deja un respiro sobre 100 para los labels
+        },
+        x: {
+          grid: { display: false },
+          ticks: { color: "#0f172a", font: { weight: "700", size: 14 } }
+        }
+      },
+      plugins: {
+        legend: {
+          position: "bottom",
+          labels: { padding: 16, font: { size: 13, weight: "600" } }
+        },
+        tooltip: {
+          callbacks: {
+            label: (ctx) => `${ctx.dataset.label}: ${percentFormatter(ctx.parsed.y)}`
+          }
+        },
+        datalabels: {
+          display: true,
+          color: "#fff",
+          font: { weight: "700", size: 12 },
+          backgroundColor: (ctx) => ctx.dataset.borderColor,
+          borderRadius: 6,
+          padding: 6,
+          anchor: "center",
+          align: "center",
+          shadowColor: "rgba(0,0,0,0.35)",
+          shadowBlur: 5,
+          formatter: (v) => v != null ? `${v.toFixed(0)}%` : "",
+          borderColor: "#fff",
+          borderWidth: 1,
+          clip: false
+        }
+      },
+      animation: { duration: 900 }
+    },
+    plugins: [ChartDataLabels]
+  });
+}
+
+function hexToRgba(hex, alpha = 1) {
+  const bigint = parseInt(hex.replace("#", ""), 16);
+  const r = (bigint >> 16) & 255;
+  const g = (bigint >> 8) & 255;
+  const b = bigint & 255;
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+function hexToRgba(hex, alpha = 1) {
+  const c = hex.replace("#", "");
+  const bigint = parseInt(c, 16);
+  const r = (bigint >> 16) & 255;
+  const g = (bigint >> 8) & 255;
+  const b = bigint & 255;
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+
+function hexToRgba(hex, alpha = 1) {
+  const c = hex.replace("#", "");
+  const bigint = parseInt(c, 16);
+  const r = (bigint >> 16) & 255;
+  const g = (bigint >> 8) & 255;
+  const b = bigint & 255;
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+
+/* ===========================
+   KPIs
+=========================== */
+
+function calcularKPIs(anio, mesesSel = [], inds = []) {
+  if (!anio || !Array.isArray(inds) || inds.length === 0) {
+    console.warn("Año o indicadores no proporcionados.");
+    return;
+  }
+
+  const mesesEvaluar = mesesSel.length ? mesesSel : Object.keys(indicadores[inds[0]]?.resultado?.[anio] || {});
+  if (mesesEvaluar.length === 0) {
+    console.warn(`No hay meses válidos para el año ${anio}`);
+    return;
+  }
+
+  let valores = [];
+  let metas = [];
+
+  inds.forEach(ind => {
+    const indicador = indicadores[ind];
+    if (!indicador) {
+      console.warn(`Indicador "${ind}" no encontrado`);
+      return;
+    }
+
+    mesesEvaluar.forEach(mes => {
+      const val = indicador?.resultado?.[anio]?.[mes];
+      if (val != null && !isNaN(val)) {
+        valores.push(Number(val));
+        metas.push(Number(indicador.meta));
+      }
+    });
+  });
+
+  if (valores.length === 0) {
+    console.warn("No se encontraron valores válidos para calcular KPI.");
+    return;
+  }
+
+  // Cálculo de promedios
+  const promedio = arr => arr.reduce((a, b) => a + b, 0) / arr.length;
+  const resultadoProm = promedio(valores);
+  const metaProm = promedio(metas);
+
+  // Actualizar UI de forma segura
+  const setKPI = (selector, value) => {
+    const el = document.querySelector(selector);
+    if (el) el.innerText = value;
+  };
+
+  setKPI("#kpiResultado .kpi-value", `${resultadoProm.toFixed(2)}%`);
+  setKPI("#kpiMeta .kpi-value", `${metaProm.toFixed(2)}%`);
+  setKPI("#kpiPeriodo .kpi-value", anio);
+
+  // Determinar cumplimiento
+  const cumple = resultadoProm >= metaProm;
+  setKPI("#kpiEstatus .kpi-value", cumple ? "CUMPLE" : "NO CUMPLE");
+
+  const kpi = document.getElementById("kpiEstatus");
+  if (kpi) {
+    kpi.classList.remove("kpi-ok", "kpi-bad");
+    kpi.classList.add(cumple ? "kpi-ok" : "kpi-bad");
+  }
+
+  // Retornar un objeto con los datos por si se quiere usar programáticamente
+  return {
+    resultadoProm,
+    metaProm,
+    cumple,
+    anio,
+    mesesEvaluar,
+    indicadores: inds
+  };
+}
+
+
+/* ===========================
+   MODAL IMPACTANTE
+=========================== */
+function mostrarModalImpactante(valor, meta, anio, mes, ind) {
+  // ====== Configuración y saneo ======
+  const v = Number(valor);
+  const m = Number(meta);
+  const esNumero = (n) => Number.isFinite(n);
+  const cumple = esNumero(v) && esNumero(m) && v >= m;
+
+  let nombreIndicador = "Indicador";
+  try {
+    if (typeof indicadores !== "undefined" && indicadores[ind]?.nombre) {
+      nombreIndicador = String(indicadores[ind].nombre);
+    }
+  } catch (_) {}
+
+  // Evita duplicar modales
+  const prev = document.getElementById("overlay-modal-impactante");
+  if (prev) prev.remove();
+
+  // ====== Inyecta estilos (una sola vez) ======
+  if (!document.getElementById("estilos-modal-impactante")) {
+    const style = document.createElement("style");
+    style.id = "estilos-modal-impactante";
+    style.textContent = `
+      :root {
+        --ok-500:#16a34a; --ok-600:#15803d; --ok-700:#166534;
+        --err-500:#ef4444; --err-600:#dc2626; --err-700:#b91c1c;
+        --ink:#0f172a; --muted:#475569; --card:#ffffff; --shadow:0 25px 60px rgba(0,0,0,.22);
+        --brand:#0a3b72; --brand-600:#0d4c92;
+      }
+
+      @keyframes fadeInOverlay { from{opacity:0} to{opacity:1} }
+      @keyframes scaleIn { from{transform:scale(.94);opacity:0} to{transform:scale(1);opacity:1} }
+      @keyframes shake {
+        0%,100%{transform:translateX(0)}
+        20%{transform:translateX(-6px)}
+        40%{transform:translateX(6px)}
+        60%{transform:translateX(-4px)}
+        80%{transform:translateX(4px)}
+      }
+      @keyframes confetti {
+        0%{transform:translateY(-20px) rotate(0deg); opacity:0}
+        10%{opacity:1}
+        100%{transform:translateY(160px) rotate(540deg); opacity:0}
+      }
+
+      /* Accesibilidad focus */
+      .mi-btn:focus, .mi-x:focus { outline:3px solid #60a5fa; outline-offset:2px; }
+
+      /* Confeti piezas */
+      .confetti {
+        position:absolute; top:0; left:50%;
+        width:8px; height:12px; opacity:0; border-radius:2px;
+        animation:confetti 1.6s ease forwards;
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  // ====== Bloquear scroll ======
+  const prevOverflow = document.body.style.overflow;
+  document.body.style.overflow = "hidden";
+
+  // ====== Overlay ======
+  const overlay = document.createElement("div");
+  overlay.id = "overlay-modal-impactante";
+  Object.assign(overlay.style, {
+    position: "fixed",
+    inset: "0",
+    background: "rgba(0,0,0,.55)",
+    backdropFilter: "blur(4px)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: "9999",
+    animation: "fadeInOverlay .28s ease",
+  });
+
+  // ====== Card ======
+  const card = document.createElement("div");
+  card.setAttribute("role", "dialog");
+  card.setAttribute("aria-modal", "true");
+  card.style.width = "760px";
+  card.style.maxWidth = "94vw";
+  card.style.borderRadius = "22px";
+  card.style.background = "var(--card)";
+  card.style.boxShadow = "var(--shadow)";
+  card.style.overflow = "hidden";
+  card.style.fontFamily = "'Segoe UI', Roboto, system-ui, -apple-system, sans-serif";
+  card.style.animation = "scaleIn .32s ease";
+
+  // ====== Header degradado + icono ======
+  const header = document.createElement("div");
+  header.style.padding = "28px 28px 22px";
+  header.style.color = "#fff";
+  header.style.display = "flex";
+  header.style.alignItems = "center";
+  header.style.justifyContent = "space-between";
+  header.style.background = cumple
+    ? "linear-gradient(135deg, var(--ok-600), var(--ok-500))"
+    : "linear-gradient(135deg, var(--err-600), var(--err-500))";
+
+  // Título con icono
+  const titleWrap = document.createElement("div");
+  titleWrap.style.display = "flex";
+  titleWrap.style.alignItems = "center";
+  titleWrap.style.gap = "14px";
+
+  const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  icon.setAttribute("width", "28");
+  icon.setAttribute("height", "28");
+  icon.setAttribute("viewBox", "0 0 24 24");
+  icon.setAttribute("fill", "none");
+  icon.setAttribute("stroke", "currentColor");
+  icon.setAttribute("stroke-width", "2");
+  icon.setAttribute("stroke-linecap", "round");
+  icon.setAttribute("stroke-linejoin", "round");
+  icon.style.filter = "drop-shadow(0 2px 4px rgba(0,0,0,.25))";
+
+  if (cumple) {
+    // Check circle
+    icon.innerHTML = `<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>`;
+  } else {
+    // Alert triangle
+    icon.innerHTML = `<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>`;
+  }
+
+  const h1 = document.createElement("h1");
+  h1.textContent = cumple ? "Meta cumplida" : "Meta no cumplida";
+  h1.style.margin = "0";
+  h1.style.fontSize = "26px";
+  h1.style.fontWeight = "800";
+  h1.style.letterSpacing = "-0.3px";
+  h1.style.textShadow = "0 2px 6px rgba(0,0,0,.25)";
+
+  titleWrap.appendChild(icon);
+  titleWrap.appendChild(h1);
+
+  // Botón X
+  const btnX = document.createElement("button");
+  btnX.className = "mi-x";
+  btnX.setAttribute("aria-label", "Cerrar");
+  Object.assign(btnX.style, {
+    appearance: "none",
+    border: "none",
+    background: "rgba(255,255,255,.18)",
+    color: "#fff",
+    width: "36px",
+    height: "36px",
+    borderRadius: "10px",
+    cursor: "pointer",
+    display: "grid",
+    placeItems: "center",
+    transition: "all .2s ease",
+  });
+  btnX.innerHTML = `
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="18" y1="6" x2="6" y2="18"/>
+      <line x1="6" y1="6" x2="18" y2="18"/>
+    </svg>`;
+  btnX.addEventListener("mouseover", () => {
+    btnX.style.background = "rgba(255,255,255,.28)";
+    btnX.style.transform = "translateY(-1px)";
+  });
+  btnX.addEventListener("mouseout", () => {
+    btnX.style.background = "rgba(255,255,255,.18)";
+    btnX.style.transform = "translateY(0)";
+  });
+
+  header.appendChild(titleWrap);
+  header.appendChild(btnX);
+
+  // ====== Contenido ======
+  const body = document.createElement("div");
+  body.style.padding = "26px 28px 30px";
+  body.style.color = "var(--ink)";
+
+  // Subtítulo
+  const sub = document.createElement("div");
+  sub.style.marginTop = "2px";
+  sub.style.fontSize = "16px";
+  sub.style.color = "#e5f3ff";
+  sub.style.opacity = "0.95";
+  sub.textContent = `${nombreIndicador} — ${(mes || "").toString().toUpperCase()} ${anio ?? ""}`;
+  sub.style.marginLeft = "42px"; // alineado al icono
+  header.appendChild(sub);
+
+  // Tarjeta métricas
+  const grid = document.createElement("div");
+  grid.style.display = "grid";
+  grid.style.gridTemplateColumns = "repeat(3, 1fr)";
+  grid.style.gap = "14px";
+  grid.style.marginTop = "18px";
+
+  const metric = (label, value) => {
+    const wrap = document.createElement("div");
+    wrap.style.border = "1px solid #eef2f7";
+    wrap.style.borderRadius = "14px";
+    wrap.style.padding = "16px";
+    wrap.style.background = "#fafcff";
+    wrap.style.boxShadow = "inset 0 1px 0 rgba(255,255,255,.75)";
+    const l = document.createElement("div");
+    l.textContent = label;
+    l.style.fontSize = "12px";
+    l.style.letterSpacing = ".4px";
+    l.style.textTransform = "uppercase";
+    l.style.color = "#64748b";
+    const v = document.createElement("div");
+    v.textContent = value;
+    v.style.fontSize = "22px";
+    v.style.fontWeight = "800";
+    v.style.color = "var(--ink)";
+    v.style.marginTop = "6px";
+    wrap.appendChild(l);
+    wrap.appendChild(v);
+    return wrap;
+  };
+
+  grid.appendChild(metric("Resultado", `${esNumero(v) ? v : "-"}%`));
+  grid.appendChild(metric("Meta", `${esNumero(m) ? m : "-"}%`));
+  grid.appendChild(
+    metric(
+      "Brecha",
+      esNumero(v) && esNumero(m) ? `${(v - m).toFixed(2)}%` : "-"
+    )
+  );
+
+  // Barra de progreso
+  const progresoWrap = document.createElement("div");
+  progresoWrap.style.marginTop = "16px";
+
+  const labelProg = document.createElement("div");
+  labelProg.textContent = "Avance hacia la meta";
+  labelProg.style.fontSize = "13px";
+  labelProg.style.color = "var(--muted)";
+  labelProg.style.marginBottom = "8px";
+
+  const track = document.createElement("div");
+  track.style.height = "12px";
+  track.style.borderRadius = "999px";
+  track.style.background = "#e2e8f0";
+  track.style.overflow = "hidden";
+  track.style.boxShadow = "inset 0 1px 2px rgba(0,0,0,.05)";
+
+  const fill = document.createElement("div");
+  fill.style.height = "100%";
+  fill.style.width = "0%";
+  fill.style.borderRadius = "999px";
+  fill.style.transition = "width .9s cubic-bezier(.2,.8,.2,1)";
+  fill.style.background = cumple
+    ? "linear-gradient(90deg, var(--ok-600), var(--ok-500))"
+    : "linear-gradient(90deg, var(--err-600), var(--err-500))";
+
+  const pct = esNumero(v) && esNumero(m) && m !== 0 ? Math.max(0, Math.min(100, (v / m) * 100)) : 0;
+  requestAnimationFrame(() => (fill.style.width = `${pct}%`));
+
+  track.appendChild(fill);
+  progresoWrap.appendChild(labelProg);
+  progresoWrap.appendChild(track);
+
+  // Mensaje
+  const p = document.createElement("p");
+  p.style.marginTop = "18px";
+  p.style.fontSize = "15px";
+  p.style.color = "var(--muted)";
+  p.style.lineHeight = "1.65";
+  p.textContent = cumple
+    ? "El desempeño supera el estándar establecido, alineado a los objetivos estratégicos."
+    : "El indicador está por debajo de la meta. Se recomiendan acciones correctivas y seguimiento ejecutivo.";
+
+  // Botón principal
+  const btn = document.createElement("button");
+  btn.className = "mi-btn";
+  btn.id = "cerrarModalImpactante";
+  Object.assign(btn.style, {
+    marginTop: "22px",
+    padding: "14px 46px",
+    border: "none",
+    borderRadius: "14px",
+    background: "var(--brand)",
+    color: "#fff",
+    fontSize: "16px",
+    fontWeight: "800",
+    cursor: "pointer",
+    transition: "all .22s ease",
+    boxShadow: "0 10px 20px rgba(10,59,114,.25)",
+  });
+  btn.textContent = "Cerrar";
+  btn.addEventListener("mouseover", () => {
+    btn.style.background = "var(--brand-600)";
+    btn.style.transform = "translateY(-2px)";
+    btn.style.boxShadow = "0 12px 22px rgba(10,59,114,.28)";
+  });
+  btn.addEventListener("mouseout", () => {
+    btn.style.background = "var(--brand)";
+    btn.style.transform = "translateY(0)";
+    btn.style.boxShadow = "0 10px 20px rgba(10,59,114,.25)";
+  });
+
+  // Montaje
+  body.appendChild(grid);
+  body.appendChild(progresoWrap);
+  body.appendChild(p);
+  body.appendChild(btn);
+  card.appendChild(header);
+  card.appendChild(body);
+  overlay.appendChild(card);
+  document.body.appendChild(overlay);
+
+  // ====== Confeti o shake ======
+  if (cumple) {
+    for (let i = 0; i < 18; i++) {
+      const c = document.createElement("div");
+      c.className = "confetti";
+      const hue = 120 + Math.round(Math.random() * 60); // verdes/azules
+      c.style.background = `hsl(${hue} 80% 50%)`;
+      c.style.left = `${50 + (Math.random() * 50 - 25)}%`;
+      c.style.animationDelay = `${Math.random() * 0.25}s`;
+      c.style.transform = `translateY(-20px) rotate(${Math.random() * 180}deg)`;
+      overlay.appendChild(c);
+      setTimeout(() => c.remove(), 1700);
+    }
+  } else {
+    card.style.animation = "shake .45s ease";
+  }
+
+  // ====== Cierre y accesibilidad ======
+  const cerrar = () => {
+    overlay.remove();
+    document.body.style.overflow = prevOverflow || "";
+    document.removeEventListener("keydown", onKey);
+  };
+  const onKey = (e) => { if (e.key === "Escape") cerrar(); };
+  document.addEventListener("keydown", onKey);
+
+  overlay.addEventListener("click", (e) => { if (e.target === overlay) cerrar(); });
+  btn.addEventListener("click", cerrar);
+  btnX.addEventListener("click", cerrar);
+
+  // Foco inicial
+  btn.focus();
+}
+
+/* ===========================
+   EVENTOS
+=========================== */
+
+document.getElementById("applyFilter").addEventListener("click", actualizarDashboard);
+document.getElementById("resetFilter").addEventListener("click", () => location.reload());
+
+/* Primer render */
+actualizarDashboard();
+
+</script>
+
+<style>
+
+/* ----------------------------- */
+/*       ESTILOS GENERALES       */
+/* ----------------------------- */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+
+:root{
+  --color-bg:#eef2f7;
+  --color-primary:#003366;
+  --color-primary-light:#0078d4;
+  --color-primary-gradient:linear-gradient(135deg,#004b8d,#0078d4);
+  --color-card:#ffffff;
+  --color-muted:#64748b;
+  --shadow-sm:0 4px 12px rgba(0,0,0,.06);
+  --shadow-md:0 10px 25px rgba(0,0,0,.08);
+  --shadow-lg:0 18px 40px rgba(0,0,0,.12);
+  --radius-sm:10px;
+  --radius-md:14px;
+  --radius-lg:20px;
+}
+
+*{ box-sizing:border-box; }
+
+body{
+  margin:0;
+  background:var(--color-bg);
+  font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  color:#1f2937;
+}
+
+.sars-dashboard{
+  padding:30px;
+}
+
+/* ----------------------------- */
+/*            TITULOS            */
+/* ----------------------------- */
+
+.dashboard-title{
+  font-size:32px;
+  font-weight:800;
+  color:var(--color-primary);
+  margin-bottom:25px;
+  letter-spacing:-0.4px;
+}
+
+/* ----------------------------- */
+/*          LAYOUT GRID          */
+/* ----------------------------- */
+
+.dashboard-container{
+  display:grid;
+  grid-template-columns:280px 1fr;
+  gap:30px;
+}
+
+.dashboard-filters{
+  background:var(--color-card);
+  padding:22px;
+  border-radius:var(--radius-md);
+  box-shadow:var(--shadow-md);
+}
+
+/* ----------------------------- */
+/*            FILTROS            */
+/* ----------------------------- */
+
+.filter-group{
+  margin-bottom:20px;
+}
+
+label{
+  font-weight:700;
+  display:block;
+  margin-bottom:8px;
+  color:var(--color-primary);
+  font-size:14px;
+}
+
+/* Mejora visual de select multiple */
+select{
+  width:100%;
+  height:130px;
+  border-radius:var(--radius-md);
+  border:2px solid var(--color-primary-light);
+  padding:10px;
+  background:white;
+  font-size:14px;
+  outline:none;
+  transition:border-color .2s ease, box-shadow .2s ease;
+}
+
+select:focus{
+  border-color:#005fa3;
+  box-shadow:0 0 0 4px rgba(0,95,163,.12);
+}
+
+/* Botones de acción */
+.filter-buttons{
+  display:flex;
+  gap:10px;
+}
+
+button{
+  flex:1;
+  padding:12px;
+  border-radius:var(--radius-md);
+  border:none;
+  font-weight:700;
+  cursor:pointer;
+  transition:all .2s ease;
+  font-size:14px;
+}
+
+.btn-primary{
+  background:var(--color-primary-gradient);
+  color:white;
+}
+
+.btn-primary:hover{
+  filter:brightness(1.12);
+  transform:translateY(-2px);
+  box-shadow:var(--shadow-sm);
+}
+
+.btn-secondary{
+  background:#e2e8f0;
+  color:#0f172a;
+}
+
+.btn-secondary:hover{
+  background:#cbd5e1;
+}
+
+/* ----------------------------- */
+/*       CONTENIDO PRINCIPAL     */
+/* ----------------------------- */
+
+.dashboard-content{
+  display:flex;
+  flex-direction:column;
+  gap:25px;
+}
+
+/* ----------------------------- */
+/*              KPIs             */
+/* ----------------------------- */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+  margin: 20px 0;
+}
+
+.kpi-card {
+  background: #fff;
+  padding: 22px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: default;
+}
+
+.kpi-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
+
+.kpi-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: #6b7280; /* gris suave */
+  font-weight: 700;
+  margin-bottom: 6px;
+  letter-spacing: 0.5px;
+}
+
+.kpi-value {
+  font-size: 32px;
+  font-weight: 800;
+  color: #1d4ed8; /* azul primario */
+  line-height: 1.1;
+  transition: color 0.3s ease;
+}
+
+/* Estados KPI */
+.kpi-ok {
+  border-left: 6px solid #16a34a;
+  background: linear-gradient(90deg, #f0fdf4 0%, #ffffff 100%);
+}
+
+.kpi-bad {
+  border-left: 6px solid #dc2626;
+  background: linear-gradient(90deg, #fef2f2 0%, #ffffff 100%);
+}
+
+/* Opcional: etiqueta de cumplimiento encima */
+.kpi-status {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #374151; /* gris oscuro */
+  margin-top: 8px;
+}
+
+
+.kpi-row{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:18px;
+}
+
+.kpi-card{
+  background:white;
+  padding:20px;
+  border-radius:var(--radius-md);
+  box-shadow:var(--shadow-md);
+  transition:transform .2s ease;
+}
+
+.kpi-card:hover{
+  transform:translateY(-3px);
+}
+
+.kpi-label{
+  font-size:12px;
+  text-transform:uppercase;
+  color:var(--color-muted);
+  font-weight:700;
+  margin-bottom:4px;
+  letter-spacing:0.4px;
+}
+
+.kpi-value{
+  font-size:28px;
+  font-weight:800;
+  color:var(--color-primary);
+}
+
+/* Estados KPI */
+.kpi-ok{
+  border-left:6px solid #16a34a;
+}
+
+.kpi-bad{
+  border-left:6px solid #dc2626;
+}
+
+/* ----------------------------- */
+/*      TARJETA DEL GRÁFICO      */
+/* ----------------------------- */
+
+.card{
+  background:white;
+  padding:28px;
+  border-radius:var(--radius-lg);
+  box-shadow:var(--shadow-lg);
+}
+
+#chartTitle{
+  margin-top:0;
+  margin-bottom:12px;
+  color:#0f172a;
+}
+
+/* Alto fijo para el canvas (Chart.js respeta con maintainAspectRatio:false) */
+canvas{
+  height:500px !important;
+  width:100%;
+  display:block;
+}
+
+/* ----------------------------- */
+/*         RESPONSIVO            */
+/* ----------------------------- */
+
+@media (max-width:900px){
+  .dashboard-container{
+    grid-template-columns:1fr;
+  }
+
+  select{ height:110px; }
+
+  .kpi-row{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+@media (max-width:600px){
+  .kpi-row{
+    grid-template-columns:1fr;
+  }
+}
+
+</style>

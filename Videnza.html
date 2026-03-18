@@ -1,0 +1,3109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>LAKI ORTIZ · SISTEMA EXPERTO INCAPACIDADES </title>
+  
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  
+  <!-- Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  
+  <style>
+    /* ===== VARIABLES AVANZADAS ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      /* Colores principales */
+      --primary-50: #eef2ff;
+      --primary-100: #e0e7ff;
+      --primary-200: #c7d2fe;
+      --primary-300: #a5b4fc;
+      --primary-400: #818cf8;
+      --primary-500: #6366f1;
+      --primary-600: #4f46e5;
+      --primary-700: #4338ca;
+      --primary-800: #3730a3;
+      --primary-900: #312e81;
+      
+      /* Colores de estado */
+      --success: #10b981;
+      --success-light: #d1fae5;
+      --warning: #f59e0b;
+      --warning-light: #fef3c7;
+      --danger: #ef4444;
+      --danger-light: #fee2e2;
+      --info: #3b82f6;
+      --info-light: #dbeafe;
+      
+      /* Escala de grises */
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-300: #d1d5db;
+      --gray-400: #9ca3af;
+      --gray-500: #6b7280;
+      --gray-600: #4b5563;
+      --gray-700: #374151;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+      
+      /* Sombras */
+      --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+      --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+      
+      /* Animaciones */
+      --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-base: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+      
+      /* Bordes */
+      --radius-xs: 0.375rem;
+      --radius-sm: 0.5rem;
+      --radius-md: 0.75rem;
+      --radius-lg: 1rem;
+      --radius-xl: 1.5rem;
+      --radius-2xl: 2rem;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--gray-50);
+      min-height: 100vh;
+      color: var(--gray-900);
+    }
+
+    /* ===== SCROLLBAR PERSONALIZADO ===== */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--gray-100);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--gray-400);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--gray-500);
+    }
+
+    /* ===== ANIMACIONES GLOBALES ===== */
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.5;
+      }
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: -1000px 0;
+      }
+      100% {
+        background-position: 1000px 0;
+      }
+    }
+
+    .view {
+      animation: slideIn var(--transition-base);
+    }
+
+    /* ===== LOGIN ULTRA MODERNO ===== */
+    #loginView {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    #loginView::before {
+      content: '';
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 50%);
+      animation: pulse 8s ease-in-out infinite;
+    }
+
+    .login-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: var(--radius-2xl);
+      padding: clamp(32px, 6vw, 56px);
+      width: 100%;
+      max-width: 480px;
+      box-shadow: var(--shadow-2xl);
+      position: relative;
+      z-index: 10;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .login-logo {
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(135deg, var(--primary-600), var(--primary-800));
+      border-radius: var(--radius-xl);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      font-size: 40px;
+      color: white;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .login-title {
+      font-size: clamp(28px, 5vw, 36px);
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary-600), #c026d3);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .login-subtitle {
+      text-align: center;
+      color: var(--gray-600);
+      margin-bottom: 32px;
+      font-size: 15px;
+    }
+
+    /* ===== APP LAYOUT ===== */
+    #appView {
+      display: none;
+    }
+
+    /* Sidebar Premium */
+    .sidebar {
+      width: 300px;
+      height: 100vh;
+      background: linear-gradient(180deg, var(--gray-900), #020617);
+      color: white;
+      position: fixed;
+      left: 0;
+      top: 0;
+      padding: 24px;
+      overflow-y: auto;
+      transition: transform var(--transition-base);
+      z-index: 50;
+      box-shadow: var(--shadow-xl);
+    }
+
+    @media (max-width: 1024px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+      .sidebar.mobile-open {
+        transform: translateX(0);
+      }
+      .main-content {
+        margin-left: 0 !important;
+      }
+    }
+
+    .logo-area {
+      text-align: center;
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .logo-icon {
+      width: 70px;
+      height: 70px;
+      background: linear-gradient(135deg, var(--primary-500), var(--primary-700));
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      font-size: 28px;
+      font-weight: 700;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .user-profile {
+      background: rgba(255,255,255,0.1);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      margin-bottom: 32px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .user-avatar {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: 700;
+      box-shadow: var(--shadow-md);
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 18px;
+      margin: 6px 0;
+      border-radius: var(--radius-md);
+      color: var(--gray-300);
+      transition: all var(--transition-fast);
+      cursor: pointer;
+      width: 100%;
+      border: none;
+      background: transparent;
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .menu-item:hover {
+      background: rgba(255,255,255,0.1);
+      color: white;
+      transform: translateX(4px);
+    }
+
+    .menu-item.active {
+      background: linear-gradient(90deg, var(--primary-600), var(--primary-700));
+      color: white;
+      box-shadow: var(--shadow-md);
+    }
+
+    .menu-item i {
+      width: 24px;
+      font-size: 18px;
+    }
+
+    /* Main Content */
+    .main-content {
+      margin-left: 300px;
+      padding: 28px;
+      transition: margin var(--transition-base);
+      min-height: 100vh;
+      background: var(--gray-50);
+    }
+
+    @media (max-width: 1024px) {
+      .main-content {
+        margin-left: 0;
+        padding: 20px;
+      }
+    }
+
+    /* Mobile Top Bar */
+    .mobile-topbar {
+      display: none;
+      background: white;
+      padding: 16px 20px;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      box-shadow: var(--shadow-sm);
+    }
+
+    @media (max-width: 1024px) {
+      .mobile-topbar {
+        display: flex;
+      }
+    }
+
+    .menu-toggle {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-md);
+      background: var(--gray-100);
+      border: none;
+      font-size: 20px;
+      color: var(--gray-700);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .menu-toggle:hover {
+      background: var(--gray-200);
+    }
+
+    .mobile-title {
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--gray-800);
+    }
+
+    .mobile-user {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 18px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Overlay */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      z-index: 45;
+      animation: fadeIn var(--transition-fast);
+    }
+
+    @media (max-width: 1024px) {
+      .sidebar-overlay.active {
+        display: block;
+      }
+    }
+
+    /* ===== CARDS PREMIUM ===== */
+    .card {
+      background: white;
+      border-radius: var(--radius-xl);
+      padding: clamp(20px, 3vw, 28px);
+      box-shadow: var(--shadow-md);
+      margin-bottom: 24px;
+      transition: all var(--transition-fast);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .card-header h3 {
+      font-size: clamp(18px, 2vw, 20px);
+      font-weight: 700;
+      color: var(--gray-800);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-header h3 i {
+      color: var(--primary-600);
+      font-size: 22px;
+    }
+
+    /* ===== STATS CARDS ===== */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+      margin-bottom: 28px;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: var(--radius-xl);
+      padding: 24px;
+      box-shadow: var(--shadow-md);
+      transition: all var(--transition-fast);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary-500), var(--primary-600));
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-xl);
+    }
+
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-md);
+      background: var(--primary-100);
+      color: var(--primary-600);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 16px;
+    }
+
+    .stat-label {
+      font-size: 14px;
+      color: var(--gray-500);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+
+    .stat-value {
+      font-size: clamp(28px, 4vw, 32px);
+      font-weight: 800;
+      color: var(--gray-800);
+      margin: 8px 0 4px;
+    }
+
+    .stat-trend {
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 0;
+    }
+
+    .trend-up { color: var(--success); }
+    .trend-down { color: var(--danger); }
+
+    /* ===== FORMULARIOS AVANZADOS ===== */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-600);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 14px 18px;
+      border: 2px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      font-size: 15px;
+      transition: all var(--transition-fast);
+      background: white;
+    }
+
+    .form-control:hover {
+      border-color: var(--gray-300);
+    }
+
+    .form-control:focus {
+      border-color: var(--primary-500);
+      box-shadow: 0 0 0 4px var(--primary-100);
+      outline: none;
+    }
+
+    .form-control[readonly] {
+      background: var(--gray-100);
+      cursor: default;
+      border-color: var(--gray-200);
+    }
+
+    /* ===== RESULTADO EN VIVO ===== */
+    .result-card {
+      background: linear-gradient(135deg, var(--gray-50), white);
+      border-radius: var(--radius-xl);
+      padding: 24px;
+      margin: 24px 0;
+      border: 2px solid var(--gray-200);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .result-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 150px;
+      height: 150px;
+      background: linear-gradient(135deg, transparent, rgba(99, 102, 241, 0.1));
+      border-radius: 50%;
+      transform: translate(50%, -50%);
+    }
+
+    .result-total {
+      font-size: clamp(36px, 5vw, 48px);
+      font-weight: 800;
+      color: var(--primary-600);
+      line-height: 1.2;
+      letter-spacing: -1px;
+    }
+
+    .result-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 20px;
+      border-radius: 100px;
+      font-size: 14px;
+      font-weight: 600;
+      margin: 12px 0;
+    }
+
+    .badge-success { background: var(--success-light); color: #065f46; }
+    .badge-warning { background: var(--warning-light); color: #92400e; }
+    .badge-danger { background: var(--danger-light); color: #991b1b; }
+    .badge-info { background: var(--info-light); color: #1e40af; }
+
+    .result-detail {
+      font-size: 15px;
+      color: var(--gray-600);
+      padding: 12px 0;
+      line-height: 1.6;
+    }
+
+    /* Progress Bar */
+    .progress-container {
+      width: 100%;
+      height: 8px;
+      background: var(--gray-200);
+      border-radius: 4px;
+      margin: 20px 0;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary-500), var(--primary-600));
+      border-radius: 4px;
+      transition: width var(--transition-base);
+    }
+
+    /* ===== BOTONES PREMIUM ===== */
+    .btn {
+      padding: 14px 28px;
+      border: none;
+      border-radius: var(--radius-lg);
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+
+    .btn:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    .btn-primary { 
+      background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+      color: white;
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-success { 
+      background: linear-gradient(135deg, var(--success), #059669);
+      color: white;
+    }
+
+    .btn-warning { 
+      background: linear-gradient(135deg, var(--warning), #d97706);
+      color: white;
+    }
+
+    .btn-danger { 
+      background: linear-gradient(135deg, var(--danger), #dc2626);
+      color: white;
+    }
+
+    .btn-outline { 
+      background: white;
+      border: 2px solid var(--gray-200);
+      color: var(--gray-700);
+    }
+
+    .btn:hover { 
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .btn-sm { 
+      padding: 10px 20px;
+      font-size: 13px;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* ===== TABLAS PROFESIONALES ===== */
+    .table-responsive {
+      overflow-x: auto;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--gray-200);
+      background: white;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 800px;
+    }
+
+    th {
+      background: var(--gray-100);
+      padding: 16px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--gray-600);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 2px solid var(--gray-200);
+      text-align: left;
+    }
+
+    td {
+      padding: 14px;
+      font-size: 14px;
+      border-bottom: 1px solid var(--gray-200);
+      color: var(--gray-700);
+    }
+
+    tr:hover td {
+      background: var(--gray-50);
+    }
+
+    /* ===== BADGES ===== */
+    .badge {
+      padding: 6px 12px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 600;
+      display: inline-block;
+    }
+
+    /* ===== MODAL PREMIUM ===== */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(8px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      animation: fadeIn var(--transition-fast);
+    }
+
+    .modal {
+      background: white;
+      border-radius: var(--radius-xl);
+      padding: 32px;
+      max-width: 500px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-2xl);
+      animation: slideIn var(--transition-base);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .modal-header h3 {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--gray-800);
+    }
+
+    .modal-close {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-md);
+      background: var(--gray-100);
+      border: none;
+      font-size: 18px;
+      color: var(--gray-600);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .modal-close:hover {
+      background: var(--gray-200);
+      color: var(--gray-800);
+    }
+
+    /* ===== UPLOAD AREA ===== */
+    .upload-area {
+      border: 2px dashed var(--gray-300);
+      border-radius: var(--radius-xl);
+      padding: 48px 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      background: var(--gray-50);
+    }
+
+    .upload-area:hover {
+      border-color: var(--primary-500);
+      background: var(--primary-50);
+    }
+
+    .upload-icon {
+      font-size: 64px;
+      color: var(--primary-500);
+      margin-bottom: 20px;
+    }
+
+    /* ===== ALERTAS PERSONALIZADAS ===== */
+    .custom-alert {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 16px 24px;
+      border-radius: var(--radius-lg);
+      background: white;
+      box-shadow: var(--shadow-xl);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 2000;
+      animation: slideIn var(--transition-fast);
+      border-left: 4px solid var(--primary-500);
+    }
+
+    .custom-alert.success { border-left-color: var(--success); }
+    .custom-alert.error { border-left-color: var(--danger); }
+    .custom-alert.warning { border-left-color: var(--warning); }
+
+    /* ===== LOADING ===== */
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--gray-200);
+      border-top-color: var(--primary-500);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ===== UTILITIES ===== */
+    .hidden { display: none !important; }
+    .mt-4 { margin-top: 16px; }
+    .mb-4 { margin-bottom: 16px; }
+    .w-100 { width: 100%; }
+    .text-center { text-align: center; }
+    .text-right { text-align: right; }
+  </style>
+</head>
+<body>
+  <!-- LOGIN VIEW -->
+  <div id="loginView">
+    <div class="login-card">
+      <div class="login-logo">
+        <i class="fas fa-shield-alt"></i>
+      </div>
+      <h1 class="login-title">Videnza</h1>
+      <p class="login-subtitle">Claridad en tus recobros, liquidez para tu empresa</p>
+      
+      <div class="form-group">
+        <label><i class="fas fa-user"></i> Usuario</label>
+        <input type="text" class="form-control" id="loginUser" placeholder="Número de identificación" value="admin">
+      </div>
+      
+      <div class="form-group">
+        <label><i class="fas fa-lock"></i> Contraseña</label>
+        <input type="password" class="form-control" id="loginPass" placeholder="••••••••" value="1234">
+      </div>
+      
+      <button class="btn btn-primary w-100" id="loginBtn" style="padding: 16px;">
+        <i class="fas fa-arrow-right"></i> Ingresar al Sistema
+      </button>
+      
+      <div style="margin-top: 24px; text-align: center; font-size: 13px; color: var(--gray-500);">
+        <i class="fas fa-shield-alt"></i> Todos los derechos reservados Freister l Ortiz© 2026
+      </div>
+    </div>
+  </div>
+
+  <!-- APP VIEW -->
+  <div id="appView">
+    <!-- Mobile Top Bar -->
+    <div class="mobile-topbar">
+      <button class="menu-toggle" id="menuToggle">
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="mobile-title" id="currentViewTitle">Dashboard</div>
+      <div class="mobile-user" id="mobileAvatar">A</div>
+    </div>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar Premium -->
+    <div class="sidebar" id="sidebar">
+      <div class="logo-area">
+        <div class="logo-icon">
+          <i class="fas fa-crown"></i>
+        </div>
+        <h3>LAKI ORTIZ</h3>
+        <p style="font-size: 12px; opacity: 0.7;">Ultra Premium 2026</p>
+      </div>
+      
+      <div class="user-profile" id="userProfile">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <div class="user-avatar" id="userAvatar">A</div>
+          <div>
+            <div style="font-weight: 700; font-size: 16px;" id="userName">Admin</div>
+            <div style="font-size: 13px; opacity: 0.7;" id="userRole">Administrador</div>
+          </div>
+        </div>
+      </div>
+      
+      <div style="margin-top: 24px;">
+        <button class="menu-item active" onclick="showView('dashboard')" id="menuDashboard">
+          <i class="fas fa-chart-pie"></i> Dashboard
+        </button>
+        <button class="menu-item" onclick="showView('cargarArchivos')" id="menuCargar">
+          <i class="fas fa-file-upload"></i> Cargar Archivos
+        </button>
+        <button class="menu-item" onclick="showView('registro')" id="menuRegistro">
+          <i class="fas fa-file-medical"></i> Registrar Incapacidad
+        </button>
+        <button class="menu-item" onclick="showView('consulta')" id="menuConsulta">
+          <i class="fas fa-search"></i> Consultar
+        </button>
+        <button class="menu-item" onclick="showView('reportes')" id="menuReportes">
+          <i class="fas fa-chart-bar"></i> Reportes Avanzados
+        </button>
+        <button class="menu-item" onclick="showView('asignaciones')" id="menuAsignaciones">
+          <i class="fas fa-tasks"></i> Asignar Tareas
+        </button>
+        <button class="menu-item" onclick="showView('admin')" id="menuAdmin">
+          <i class="fas fa-users-cog"></i> Admin Usuarios
+        </button>
+        <button class="menu-item" onclick="showView('configuracion')" id="menuConfig">
+          <i class="fas fa-cog"></i> Configuración
+        </button>
+        <button class="menu-item" onclick="showView('auditoria')" id="menuAuditoria">
+          <i class="fas fa-history"></i> Auditoría
+        </button>
+        <button class="menu-item" onclick="showView('backup')" id="menuBackup">
+          <i class="fas fa-database"></i> Backup & Restore
+        </button>
+      </div>
+      
+      <div style="position: absolute; bottom: 24px; width: calc(100% - 48px);">
+        <button class="menu-item" onclick="logout()" style="color: #f87171;">
+          <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+        </button>
+      </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+      <!-- DASHBOARD ULTRA -->
+      <div id="dashboard" class="view">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-file-medical"></i>
+            </div>
+            <div class="stat-label">Total Incapacidades</div>
+            <div class="stat-value" id="totalIncapacidades">0</div>
+            <div class="stat-trend trend-up">
+              <i class="fas fa-arrow-up"></i> +12% vs mes anterior
+            </div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-dollar-sign"></i>
+            </div>
+            <div class="stat-label">Valor Liquidado</div>
+            <div class="stat-value" id="totalLiquidado">$0</div>
+            <div class="stat-trend trend-up">
+              <i class="fas fa-arrow-up"></i> +8.3% vs mes anterior
+            </div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-label">Por Liquidar</div>
+            <div class="stat-value" id="porLiquidar">0</div>
+            <div class="stat-trend" style="color: var(--warning);">
+              <i class="fas fa-exclamation-circle"></i> Pendiente de gestión
+            </div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="stat-label">Prescritas</div>
+            <div class="stat-value" id="prescritas">0</div>
+            <div class="stat-trend trend-down">
+              <i class="fas fa-arrow-down"></i> Sin reconocimiento
+            </div>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-header">
+            <h3><i class="fas fa-chart-line"></i> Análisis por Origen</h3>
+            <div class="btn-group">
+              <button class="btn btn-sm btn-outline" onclick="cambiarPeriodo('dia')">Día</button>
+              <button class="btn btn-sm btn-outline" onclick="cambiarPeriodo('semana')">Semana</button>
+              <button class="btn btn-sm btn-primary" onclick="cambiarPeriodo('mes')">Mes</button>
+              <button class="btn btn-sm btn-outline" onclick="cambiarPeriodo('año')">Año</button>
+            </div>
+          </div>
+          <div style="height: 350px;">
+            <canvas id="graficoResumen"></canvas>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-header">
+            <h3><i class="fas fa-history"></i> Últimos Registros</h3>
+            <button class="btn btn-primary btn-sm" onclick="showView('consulta')">
+              Ver todos <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Empresa</th>
+                  <th>Documento</th>
+                  <th>Nombre</th>
+                  <th>Origen</th>
+                  <th>Días</th>
+                  <th>Total</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody id="ultimosRegistros"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      
+      <!-- CARGAR ARCHIVOS PREMIUM -->
+      <div id="cargarArchivos" class="view hidden">
+        <div class="card">
+          <div class="card-header">
+            <h3><i class="fas fa-file-upload"></i> Carga Masiva de Archivos</h3>
+            <span class="badge badge-info">Procesamiento inteligente</span>
+          </div>
+          
+          <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+            <i class="fas fa-cloud-upload-alt upload-icon"></i>
+            <h4 style="font-size: 18px; margin-bottom: 8px;">Arrastra o selecciona archivo</h4>
+            <p style="color: var(--gray-500);">Excel .xlsx, .xls, .csv o .txt</p>
+            <input type="file" id="fileInput" accept=".xlsx,.xls,.csv,.txt" style="display: none;" onchange="procesarArchivo(this)">
+          </div>
+          
+          <div class="form-group mt-4">
+            <label>Formato esperado (archivo separado por tabs o columnas):</label>
+            <div style="background: var(--gray-100); padding: 20px; border-radius: var(--radius-lg); font-size: 13px; font-family: monospace;">
+              NIT | EMPRESA | DOCUMENTO | NOMBRE | FECHA INICIAL | FECHA FINAL | DIAS | DIAS ACUMULADOS | AÑO | ORIGEN | IBC | FECHA AFILIACION | FECHA RETIRO | ESTADO EMPRESA
+            </div>
+          </div>
+          
+          <div id="previewCarga" class="hidden">
+            <h4 style="margin: 24px 0 16px;">Vista previa de datos:</h4>
+            <div class="table-responsive">
+              <table id="tablaPreview">
+                <thead></thead>
+                <tbody></tbody>
+              </table>
+            </div>
+            
+            <div class="progress-container">
+              <div class="progress-bar" id="progressBar" style="width: 0%;"></div>
+            </div>
+            
+            <div class="btn-group">
+              <button class="btn btn-success" onclick="confirmarCarga()">
+                <i class="fas fa-check"></i> Confirmar Carga (<span id="totalRegistros">0</span> registros)
+              </button>
+              <button class="btn btn-outline" onclick="cancelarCarga()">
+                <i class="fas fa-times"></i> Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- REGISTRO ULTRA PREMIUM CON CÁLCULO AUTOMÁTICO -->
+      <div id="registro" class="view hidden">
+        <div class="card">
+          <div class="card-header">
+            <h3><i class="fas fa-file-medical"></i> Registro de Incapacidad</h3>
+            <div class="result-badge badge-success" id="modoCalculo">
+              <i class="fas fa-bolt"></i> Cálculo en tiempo real
+            </div>
+          </div>
+          
+          <div class="form-grid">
+            <div class="form-group">
+              <label>NIT Empresa *</label>
+              <input type="text" class="form-control" id="nit" placeholder="NIT sin dígito">
+            </div>
+            
+            <div class="form-group">
+              <label>Empresa *</label>
+              <input type="text" class="form-control" id="empresa" placeholder="Nombre empresa">
+            </div>
+            
+            <div class="form-group">
+              <label>Documento *</label>
+              <input type="text" class="form-control" id="documento" placeholder="Número documento">
+            </div>
+            
+            <div class="form-group">
+              <label>Nombre Completo *</label>
+              <input type="text" class="form-control" id="nombre" placeholder="Nombre completo">
+            </div>
+            
+            <!-- Fechas con cálculo automático -->
+            <div class="form-group">
+              <label>Fecha Inicial *</label>
+              <input type="date" class="form-control" id="fechaInicial" onchange="calcularAutomatico()">
+            </div>
+            
+            <div class="form-group">
+              <label>Fecha Final *</label>
+              <input type="date" class="form-control" id="fechaFinal" onchange="calcularAutomatico()">
+            </div>
+            
+            <!-- Días calculados automáticamente -->
+            <div class="form-group">
+              <label>Días *</label>
+              <input type="number" class="form-control" id="dias" readonly style="background:var(--gray-100); font-weight:700;" placeholder="0">
+            </div>
+            
+            <div class="form-group">
+              <label>Días Acumulados</label>
+              <input type="number" class="form-control" id="diasAcumulados" value="0" onchange="calcularAutomatico()">
+            </div>
+            
+            <div class="form-group">
+              <label>Año *</label>
+              <select class="form-control" id="anio" onchange="calcularAutomatico()">
+                <option value="2026">2026</option>
+                <option value="2025" selected>2025</option>
+                <option value="2024">2024</option>
+                <option value="2023">2023</option>
+                <option value="2022">2022</option>
+                <option value="2021">2021</option>
+                <option value="2020">2020</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label>Origen *</label>
+              <select class="form-control" id="origen" onchange="calcularAutomatico()">
+                <option value="EG">Enfermedad General</option>
+                <option value="AT">Accidente de Trabajo</option>
+                <option value="EP">Enfermedad Profesional</option>
+                <option value="LM">Licencia Maternidad</option>
+                <option value="LP">Licencia Paternidad</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label>Tipo *</label>
+              <select class="form-control" id="tipo" onchange="calcularAutomatico()">
+                <option value="Nueva">Nueva</option>
+                <option value="Prorroga">Prórroga</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label>IBC *</label>
+              <input type="number" class="form-control" id="ibc" min="0" step="1000" value="1500000" oninput="calcularAutomatico()">
+            </div>
+            
+            <div class="form-group">
+              <label>Fecha Afiliación EPS *</label>
+              <input type="date" class="form-control" id="fechaAfiliacion" onchange="calcularAutomatico()">
+            </div>
+            
+            <div class="form-group">
+              <label>Fecha Retiro EPS</label>
+              <input type="date" class="form-control" id="fechaRetiro">
+            </div>
+            
+            <div class="form-group">
+              <label>Estado Empresa</label>
+              <select class="form-control" id="estadoEmpresa">
+                <option value="ACTIVO">ACTIVO</option>
+                <option value="INACTIVO">INACTIVO</option>
+                <option value="SUSPENDIDO">SUSPENDIDO</option>
+              </select>
+            </div>
+          </div>
+          
+          <!-- RESULTADO EN VIVO -->
+          <div class="result-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+              <div>
+                <div style="font-size:14px; color:var(--gray-500); text-transform: uppercase; letter-spacing: 0.5px;">Valor a liquidar</div>
+                <div class="result-total" id="resultadoTotal">$0</div>
+              </div>
+              <div id="resultadoEstado">
+                <span class="result-badge badge-info">Pendiente</span>
+              </div>
+            </div>
+            
+            <div class="progress-container">
+              <div class="progress-bar" id="progressCalculo" style="width: 0%;"></div>
+            </div>
+            
+            <div class="result-detail" id="detalleCalculo">
+              Complete todos los campos requeridos para ver el cálculo
+            </div>
+          </div>
+          
+          <div class="btn-group">
+            <button class="btn btn-primary" onclick="guardarRegistro()">
+              <i class="fas fa-save"></i> Guardar Registro
+            </button>
+            <button class="btn btn-success" onclick="calcularVistaPrevia()">
+              <i class="fas fa-calculator"></i> Calcular Vista Previa
+            </button>
+            <button class="btn btn-warning" onclick="limpiarFormulario()">
+              <i class="fas fa-eraser"></i> Limpiar
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- CONSULTA AVANZADA -->
+      <div id="consulta" class="view hidden">
+        <div class="card">
+          <div class="card-header">
+            <h3><i class="fas fa-search"></i> Consulta Inteligente</h3>
+            <span class="badge badge-info">Filtros avanzados</span>
+          </div>
+          
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Empresa</label>
+              <input type="text" class="form-control" id="filtroEmpresa" placeholder="Nombre empresa">
+            </div>
+            
+            <div class="form-group">
+              <label>Documento</label>
+              <input type="text" class="form-control" id="filtroDocumento" placeholder="Número documento">
+            </div>
+            
+            <div class="form-group">
+              <label>Nombre</label>
+              <input type="text" class="form-control" id="filtroNombre" placeholder="Nombre">
+            </div>
+            
+            <div class="form-group">
+              <label>Origen</label>
+              <select class="form-control" id="filtroOrigen">
+                <option value="">Todos</option>
+                <option value="EG">Enfermedad General</option>
+                <option value="AT">Accidente Trabajo</option>
+                <option value="EP">Enfermedad Profesional</option>
+                <option value="LM">Maternidad</option>
+                <option value="LP">Paternidad</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label>Estado</label>
+              <select class="form-control" id="filtroEstado">
+                <option value="">Todos</option>
+                <option value="Liquidar">Liquidar</option>
+                <option value="Sin reconocimiento">Sin reconocimiento</option>
+                <option value="Prescrita">Prescrita</option>
+                <option value="Corresponde a ARL">ARL</option>
+                <option value="Liquidación total">Liquidación total</option>
+                <option value="Liquidación proporcional">Liquidación proporcional</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label>Año</label>
+              <select class="form-control" id="filtroAnio">
+                <option value="">Todos</option>
+                <option value="2026">2026</option>
+                <option value="2025">2025</option>
+                <option value="2024">2024</option>
+                <option value="2023">2023</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="btn-group" style="margin-bottom: 24px;">
+            <button class="btn btn-primary" onclick="aplicarFiltros()">
+              <i class="fas fa-filter"></i> Aplicar Filtros
+            </button>
+            <button class="btn btn-outline" onclick="limpiarFiltrosConsulta()">
+              <i class="fas fa-undo"></i> Limpiar
+            </button>
+            <button class="btn btn-success" onclick="exportarConsultaExcel()">
+              <i class="fas fa-file-excel"></i> Exportar Excel
+            </button>
+            <button class="btn btn-danger" onclick="exportarConsultaPDF()">
+              <i class="fas fa-file-pdf"></i> Exportar PDF
+            </button>
+          </div>
+          
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Empresa</th>
+                  <th>Documento</th>
+                  <th>Nombre</th>
+                  <th>Días</th>
+                  <th>IBC</th>
+                  <th>Total</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="tablaConsulta"></tbody>
+            </table>
+          </div>
+          
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px; flex-wrap: wrap; gap: 16px;">
+            <div id="paginacionInfo" style="color: var(--gray-600);">Mostrando 0-0 de 0 registros</div>
+            <div class="btn-group">
+              <button class="btn btn-sm btn-outline" onclick="cambiarPagina('prev')">
+                <i class="fas fa-chevron-left"></i> Anterior
+              </button>
+              <button class="btn btn-sm btn-outline" onclick="cambiarPagina('next')">
+                Siguiente <i class="fas fa-chevron-right"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- REPORTES AVANZADOS -->
+      <div id="reportes" class="view hidden">
+        <div class="card">
+          <div class="card-header">
+            <h3><i class="fas fa-chart-bar"></i> Reportes Avanzados</h3>
+            <span class="badge badge-success">Business Intelligence</span>
+          </div>
+          
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Empresa</label>
+              <select class="form-control" id="reporteEmpresa">
+                <option value="">Todas las empresas</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label>Tipo Reporte</label>
+              <select class="form-control" id="tipoReporte" onchange="cambiarTipoReporte()">
+                <option value="general">General (todos)</option>
+                <option value="porOrigen">Por Origen</option>
+                <option value="porEstado">Por Estado</option>
+                <option value="prescritas">Prescritas</option>
+                <option value="sinreconocimiento">Sin Reconocimiento</option>
+                <option value="recobro">Para Recobro</option>
+                <option value="analitico">Analítico (EG vs LM vs LP)</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label>Período</label>
+              <select class="form-control" id="periodoReporte">
+                <option value="hoy">Hoy</option>
+                <option value="semana">Esta semana</option>
+                <option value="mes">Este mes</option>
+                <option value="trimestre">Último trimestre</option>
+                <option value="año">Este año</option>
+                <option value="personalizado">Personalizado</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label>Formato</label>
+              <select class="form-control" id="formatoReporte">
+                <option value="pdf">PDF</option>
+                <option value="excel">Excel</option>
+                <option value="csv">CSV</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="btn-group" style="margin-bottom: 24px;">
+            <button class="btn btn-primary" onclick="generarReporte()">
+              <i class="fas fa-file-pdf"></i> Generar Reporte
+            </button>
+            <button class="btn btn-success" onclick="enviarPorCorreo()">
+              <i class="fas fa-envelope"></i> Enviar por Correo
+            </button>
+            <button class="btn btn-info" onclick="exportarReporteExcel()">
+              <i class="fas fa-file-excel"></i> Exportar Excel
+            </button>
+            <button class="btn btn-warning" onclick="programarReporte()">
+              <i class="fas fa-clock"></i> Programar
+            </button>
+          </div>
+          
+          <div style="height: 350px; margin-bottom: 24px;">
+            <canvas id="graficoReporte"></canvas>
+          </div>
+          
+          <div class="table-responsive">
+            <table id="tablaReporte">
+              <thead>
+                <tr>
+                  <th>Empresa</th>
+                  <th>Documento</th>
+                  <th>Nombre</th>
+                  <th>Origen</th>
+                  <th>Días</th>
+                  <th>IBC</th>
+                  <th>Total</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+              <tfoot style="font-weight: 700; background: var(--gray-100);">
+                <tr>
+                  <td colspan="6" style="text-align: right;">Total General:</td>
+                  <td id="totalGeneralReporte">$0</td>
+                  <td></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+      
+      <!-- ASIGNACIONES -->
+      <div id="asignaciones" class="view hidden">
+        <div class="card">
+          <div class="card-header">
+            <h3><i class="fas fa-tasks"></i> Gestión de Tareas</h3>
+            <span class="badge badge-info">Workflow</span>
+          </div>
+          
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Auxiliar</label>
+              <select class="form-control" id="asignarAuxiliar">
+                <option value="">Seleccionar auxiliar</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label>Tipo de tarea</label>
+              <select class="form-control" id="tipoTarea">
+                <option value="revisar">Revisar documentos</option>
+                <option value="liquidar">Liquidar incapacidades</option>
+                <option value="reportar">Generar reportes</option>
+                <option value="cargar">Cargar archivos</option>
+                <option value="auditar">Auditar registros</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label>Prioridad</label>
+              <select class="form-control" id="prioridadTarea">
+                <option value="alta">Alta</option>
+                <option value="media" selected>Media</option>
+                <option value="baja">Baja</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label>Fecha límite</label>
+              <input type="date" class="form-control" id="fechaLimite">
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label>Descripción</label>
+            <textarea class="form-control" id="descripcionTarea" rows="3" placeholder="Detalle de la tarea..."></textarea>
+          </div>
+          
+          <button class="btn btn-primary" onclick="asignarTarea()">
+            <i class="fas fa-plus-circle"></i> Asignar Tarea
+          </button>
+          
+          <hr style="margin: 32px 0; border-color: var(--gray-200);">
+          
+          <h4 style="margin-bottom: 16px;">Tareas Pendientes</h4>
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Auxiliar</th>
+                  <th>Tarea</th>
+                  <th>Prioridad</th>
+                  <th>Fecha límite</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="tablaTareas"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      
+      <!-- ADMIN USUARIOS -->
+      <div id="admin" class="view hidden">
+        <div class="card">
+          <div class="card-header">
+            <h3><i class="fas fa-users-cog"></i> Administración de Usuarios</h3>
+            <button class="btn btn-success" onclick="mostrarModalUsuario()">
+              <i class="fas fa-user-plus"></i> Nuevo Usuario
+            </button>
+          </div>
+          
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Usuario</th>
+                  <th>Nombre</th>
+                  <th>Rol</th>
+                  <th>Estado</th>
+                  <th>Último acceso</th>
+                  <th>Expira</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="tablaUsuarios"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      
+      <!-- CONFIGURACIÓN -->
+      <div id="configuracion" class="view hidden">
+        <div class="card">
+          <div class="card-header">
+            <h3><i class="fas fa-cog"></i> Configuración del Sistema</h3>
+            <span class="badge badge-info">Parámetros</span>
+          </div>
+          
+          <div class="form-grid">
+            <div class="form-group">
+              <label>SMLV 2026</label>
+              <input type="number" class="form-control" id="configSMLV2026" value="1750950">
+            </div>
+            <div class="form-group">
+              <label>SMLV 2025</label>
+              <input type="number" class="form-control" id="configSMLV2025" value="1423500">
+            </div>
+            <div class="form-group">
+              <label>SMLV 2024</label>
+              <input type="number" class="form-control" id="configSMLV2024" value="1300000">
+            </div>
+            <div class="form-group">
+              <label>SMLV 2023</label>
+              <input type="number" class="form-control" id="configSMLV2023" value="1116000">
+            </div>
+            <div class="form-group">
+              <label>Días para prescripción</label>
+              <input type="number" class="form-control" id="configDiasPrescripcion" value="1080">
+            </div>
+            <div class="form-group">
+              <label>Días mínimos relación laboral</label>
+              <input type="number" class="form-control" id="configDiasRelacion" value="60">
+            </div>
+            <div class="form-group">
+              <label>Porcentaje EG primeros días</label>
+              <input type="number" class="form-control" id="configPorcEG" value="66.67" step="0.01">
+            </div>
+            <div class="form-group">
+              <label>Correo notificaciones</label>
+              <input type="email" class="form-control" id="configEmail" value="admin@laki.com">
+            </div>
+          </div>
+          
+          <div class="btn-group">
+            <button class="btn btn-primary" onclick="guardarConfiguracion()">
+              <i class="fas fa-save"></i> Guardar Configuración
+            </button>
+            <button class="btn btn-outline" onclick="resetearConfiguracion()">
+              <i class="fas fa-undo"></i> Restablecer
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- AUDITORÍA -->
+      <div id="auditoria" class="view hidden">
+        <div class="card">
+          <div class="card-header">
+            <h3><i class="fas fa-history"></i> Log de Auditoría</h3>
+            <span class="badge badge-info">Trazabilidad completa</span>
+          </div>
+          
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th>Usuario</th>
+                  <th>Acción</th>
+                  <th>Detalle</th>
+                  <th>IP</th>
+                </tr>
+              </thead>
+              <tbody id="tablaAuditoria"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      
+      <!-- BACKUP -->
+      <div id="backup" class="view hidden">
+        <div class="card">
+          <div class="card-header">
+            <h3><i class="fas fa-database"></i> Backup & Restore</h3>
+            <span class="badge badge-success">Protección de datos</span>
+          </div>
+          
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Último backup</label>
+              <input type="text" class="form-control" id="ultimoBackup" value="2026-03-18 10:30 AM" readonly>
+            </div>
+            <div class="form-group">
+              <label>Tamaño</label>
+              <input type="text" class="form-control" id="tamanoBackup" value="2.4 MB" readonly>
+            </div>
+          </div>
+          
+          <div class="btn-group">
+            <button class="btn btn-primary" onclick="crearBackup()">
+              <i class="fas fa-download"></i> Crear Backup
+            </button>
+            <button class="btn btn-warning" onclick="restaurarBackup()">
+              <i class="fas fa-upload"></i> Restaurar
+            </button>
+            <button class="btn btn-outline" onclick="programarBackup()">
+              <i class="fas fa-clock"></i> Programar Backup
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- MODAL USUARIO -->
+  <div id="modalUsuario" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modalTitulo">Nuevo Usuario</h3>
+        <button class="modal-close" onclick="cerrarModalUsuario()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="form-group">
+        <label>Usuario</label>
+        <input type="text" class="form-control" id="modalUsername">
+      </div>
+      
+      <div class="form-group">
+        <label>Nombre completo</label>
+        <input type="text" class="form-control" id="modalNombre">
+      </div>
+      
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input type="password" class="form-control" id="modalPassword">
+      </div>
+      
+      <div class="form-group">
+        <label>Rol</label>
+        <select class="form-control" id="modalRol">
+          <option value="admin">Administrador</option>
+          <option value="supervisor">Supervisor</option>
+          <option value="analista">Analista</option>
+          <option value="auxiliar">Auxiliar</option>
+          <option value="auditor">Auditor</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label>Estado</label>
+        <select class="form-control" id="modalEstado">
+          <option value="activo">Activo</option>
+          <option value="inactivo">Inactivo</option>
+          <option value="bloqueado">Bloqueado</option>
+        </select>
+      </div>
+      
+      <div class="btn-group">
+        <button class="btn btn-success" onclick="guardarUsuario()">
+          <i class="fas fa-save"></i> Guardar
+        </button>
+        <button class="btn btn-outline" onclick="cerrarModalUsuario()">
+          <i class="fas fa-times"></i> Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ==================== CONFIGURACIÓN ULTRA PREMIUM ====================
+    const SMLV = {
+      2026: 1750950,
+      2025: 1423500,
+      2024: 1300000,
+      2023: 1116000,
+      2022: 1000000,
+      2021: 908526,
+      2020: 877803,
+      2019: 828116,
+      2018: 781242,
+      2017: 737717
+    };
+    
+    // ==================== VARIABLES GLOBALES ====================
+    let registros = [];
+    let usuarios = [];
+    let tareas = [];
+    let auditoria = [];
+    let usuarioActual = null;
+    let paginaActual = 1;
+    let registrosFiltrados = [];
+    let archivoCargado = null;
+    let chartResumen = null;
+    let chartReporte = null;
+    
+    // ==================== INICIALIZACIÓN ====================
+    document.addEventListener('DOMContentLoaded', function() {
+      cargarDatosIniciales();
+      configurarEventListeners();
+      mostrarAlerta('Bienvenido al sistema', 'success');
+    });
+    
+    function cargarDatosIniciales() {
+      // Cargar registros
+      const guardados = localStorage.getItem('incapacidades_registros');
+      if (guardados) registros = JSON.parse(guardados);
+      
+      // Cargar usuarios
+      const usuariosGuardados = localStorage.getItem('incapacidades_usuarios');
+      if (usuariosGuardados) {
+        usuarios = JSON.parse(usuariosGuardados);
+      } else {
+        usuarios = [
+          { id: 1, username: 'admin', nombre: 'Administrador', password: '1234', rol: 'admin', estado: 'activo', ultimoAcceso: null },
+          { id: 2, username: 'supervisor', nombre: 'Supervisor', password: '1234', rol: 'supervisor', estado: 'activo', ultimoAcceso: null },
+          { id: 3, username: 'analista', nombre: 'Analista Senior', password: '1234', rol: 'analista', estado: 'activo', ultimoAcceso: null },
+          { id: 4, username: 'auxiliar', nombre: 'Auxiliar', password: '1234', rol: 'auxiliar', estado: 'activo', ultimoAcceso: null },
+          { id: 5, username: 'auditor', nombre: 'Auditor Interno', password: '1234', rol: 'auditor', estado: 'activo', ultimoAcceso: null }
+        ];
+      }
+      
+      // Cargar tareas
+      const tareasGuardadas = localStorage.getItem('incapacidades_tareas');
+      if (tareasGuardadas) tareas = JSON.parse(tareasGuardadas);
+      
+      // Cargar auditoría
+      const auditoriaGuardada = localStorage.getItem('incapacidades_auditoria');
+      if (auditoriaGuardada) auditoria = JSON.parse(auditoriaGuardada);
+    }
+    
+    function configurarEventListeners() {
+      document.getElementById('loginBtn').addEventListener('click', login);
+      document.getElementById('menuToggle').addEventListener('click', toggleSidebar);
+      document.getElementById('sidebarOverlay').addEventListener('click', toggleSidebar);
+      
+      document.getElementById('loginPass').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') login();
+      });
+    }
+    
+    // ==================== ALERTAS PERSONALIZADAS ====================
+    function mostrarAlerta(mensaje, tipo = 'info') {
+      const alerta = document.createElement('div');
+      alerta.className = `custom-alert ${tipo}`;
+      alerta.innerHTML = `
+        <i class="fas fa-${tipo === 'success' ? 'check-circle' : tipo === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+        <span>${mensaje}</span>
+      `;
+      document.body.appendChild(alerta);
+      
+      setTimeout(() => {
+        alerta.remove();
+      }, 3000);
+    }
+    
+    // ==================== LOGIN ====================
+    function login() {
+      const username = document.getElementById('loginUser').value.trim();
+      const password = document.getElementById('loginPass').value.trim();
+      
+      const usuario = usuarios.find(u => u.username === username && u.password === password);
+      
+      if (!usuario) {
+        mostrarAlerta('Usuario o contraseña incorrectos', 'error');
+        return;
+      }
+      
+      if (usuario.estado !== 'activo') {
+        mostrarAlerta('Usuario inactivo o bloqueado', 'error');
+        return;
+      }
+      
+      usuarioActual = usuario;
+      usuarioActual.ultimoAcceso = new Date().toLocaleString();
+      guardarUsuarios();
+      
+      document.getElementById('loginView').style.display = 'none';
+      document.getElementById('appView').style.display = 'block';
+      
+      document.getElementById('userName').textContent = usuario.nombre;
+      document.getElementById('userRole').textContent = obtenerNombreRol(usuario.rol);
+      document.getElementById('userAvatar').textContent = usuario.nombre.charAt(0);
+      document.getElementById('mobileAvatar').textContent = usuario.nombre.charAt(0);
+      
+      configurarMenuPorRol(usuario.rol);
+      registrarAuditoria('LOGIN', `Inicio de sesión - ${usuario.nombre}`);
+      showView('dashboard');
+      actualizarDashboard();
+      mostrarAlerta(`Bienvenido ${usuario.nombre}`, 'success');
+    }
+    
+    function obtenerNombreRol(rol) {
+      const roles = {
+        'admin': 'Administrador',
+        'supervisor': 'Supervisor',
+        'analista': 'Analista',
+        'auxiliar': 'Auxiliar',
+        'auditor': 'Auditor'
+      };
+      return roles[rol] || rol;
+    }
+    
+    function configurarMenuPorRol(rol) {
+      const menusOcultos = ['menuAdmin', 'menuAuditoria', 'menuBackup', 'menuAsignaciones'];
+      
+      if (rol === 'admin') {
+        menusOcultos.forEach(m => document.getElementById(m).style.display = 'flex');
+      } else if (rol === 'auditor') {
+        document.getElementById('menuAdmin').style.display = 'none';
+        document.getElementById('menuBackup').style.display = 'none';
+        document.getElementById('menuAsignaciones').style.display = 'none';
+        document.getElementById('menuAuditoria').style.display = 'flex';
+      } else if (rol === 'supervisor') {
+        document.getElementById('menuAdmin').style.display = 'none';
+        document.getElementById('menuAuditoria').style.display = 'none';
+        document.getElementById('menuBackup').style.display = 'none';
+        document.getElementById('menuAsignaciones').style.display = 'flex';
+      } else {
+        menusOcultos.forEach(m => document.getElementById(m).style.display = 'none');
+      }
+    }
+    
+    function logout() {
+      if (confirm('¿Está seguro de cerrar sesión?')) {
+        registrarAuditoria('LOGOUT', `Cierre de sesión - ${usuarioActual.nombre}`);
+        guardarDatos();
+        location.reload();
+      }
+    }
+    
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('mobile-open');
+      document.getElementById('sidebarOverlay').classList.toggle('active');
+    }
+    
+    // ==================== NAVEGACIÓN ====================
+    function showView(viewName) {
+      document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
+      document.getElementById(viewName).classList.remove('hidden');
+      
+      document.querySelectorAll('.menu-item').forEach(btn => btn.classList.remove('active'));
+      const menuMap = {
+        'dashboard': 'menuDashboard',
+        'cargarArchivos': 'menuCargar',
+        'registro': 'menuRegistro',
+        'consulta': 'menuConsulta',
+        'reportes': 'menuReportes',
+        'asignaciones': 'menuAsignaciones',
+        'admin': 'menuAdmin',
+        'configuracion': 'menuConfig',
+        'auditoria': 'menuAuditoria',
+        'backup': 'menuBackup'
+      };
+      
+      if (menuMap[viewName]) {
+        document.getElementById(menuMap[viewName]).classList.add('active');
+      }
+      
+      const titles = {
+        'dashboard': 'Dashboard',
+        'cargarArchivos': 'Cargar Archivos',
+        'registro': 'Registro',
+        'consulta': 'Consulta',
+        'reportes': 'Reportes',
+        'asignaciones': 'Tareas',
+        'admin': 'Usuarios',
+        'configuracion': 'Configuración',
+        'auditoria': 'Auditoría',
+        'backup': 'Backup'
+      };
+      document.getElementById('currentViewTitle').textContent = titles[viewName] || 'App';
+      
+      document.getElementById('sidebar').classList.remove('mobile-open');
+      document.getElementById('sidebarOverlay').classList.remove('active');
+      
+      if (viewName === 'dashboard') actualizarDashboard();
+      if (viewName === 'consulta') cargarConsulta();
+      if (viewName === 'admin') cargarUsuarios();
+      if (viewName === 'asignaciones') cargarTareas();
+      if (viewName === 'reportes') cargarEmpresasReporte();
+      if (viewName === 'auditoria') cargarAuditoria();
+      if (viewName === 'registro') {
+        limpiarFormulario();
+        const hoy = new Date().toISOString().split('T')[0];
+        document.getElementById('fechaInicial').value = hoy;
+        const maniana = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+        document.getElementById('fechaFinal').value = maniana;
+        calcularAutomatico();
+      }
+    }
+    
+    // ==================== CÁLCULO AUTOMÁTICO ====================
+    function calcularAutomatico() {
+      const reg = obtenerDatosFormulario();
+      
+      // Calcular días automáticamente si hay fechas
+      if (reg.fechaInicial && reg.fechaFinal) {
+        const inicio = new Date(reg.fechaInicial);
+        const fin = new Date(reg.fechaFinal);
+        const diffTime = Math.abs(fin - inicio);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+        document.getElementById('dias').value = diffDays;
+        reg.dias = diffDays;
+      }
+      
+      // Validar datos mínimos
+      if (!reg.fechaInicial || !reg.fechaFinal || !reg.ibc || reg.dias <= 0) {
+        document.getElementById('resultadoTotal').textContent = '$0';
+        document.getElementById('resultadoEstado').innerHTML = '<span class="result-badge badge-info">Complete los campos</span>';
+        document.getElementById('detalleCalculo').textContent = 'Ingrese fechas, días e IBC';
+        document.getElementById('progressCalculo').style.width = '0%';
+        return;
+      }
+      
+      const resultado = calcularIncapacidad(reg);
+      
+      // Actualizar UI
+      document.getElementById('resultadoTotal').textContent = `$${formatearNumero(resultado.total)}`;
+      
+      let badgeClass = 'badge-info';
+      if (resultado.estado === 'Liquidar' || resultado.estado === 'Liquidación total') badgeClass = 'badge-success';
+      else if (resultado.estado === 'Corresponde a ARL') badgeClass = 'badge-warning';
+      else if (resultado.estado?.includes('Sin reconocimiento') || resultado.estado?.includes('Prescrita')) badgeClass = 'badge-danger';
+      
+      document.getElementById('resultadoEstado').innerHTML = `<span class="result-badge ${badgeClass}">${resultado.estado}</span>`;
+      document.getElementById('detalleCalculo').textContent = resultado.subestado || '';
+      
+      // Barra de progreso
+      const progreso = Math.min(100, (resultado.total / (reg.ibc * 2)) * 100);
+      document.getElementById('progressCalculo').style.width = `${progreso}%`;
+    }
+    
+    function calcularVistaPrevia() {
+      calcularAutomatico();
+      mostrarAlerta('Cálculo actualizado', 'success');
+    }
+    
+    // ==================== LÓGICA DE CÁLCULO ====================
+    function calcularIncapacidad(reg) {
+      if (!reg.fechaInicial || !reg.fechaAfiliacion) {
+        return { total: 0, estado: 'Faltan fechas', subestado: 'Ingrese fecha inicial y afiliación' };
+      }
+      
+      const fechaInicial = new Date(reg.fechaInicial);
+      const fechaAfiliacion = new Date(reg.fechaAfiliacion);
+      const hoy = new Date();
+      
+      let resultado = { total: 0, estado: '', subestado: '' };
+      
+      // 1. AT y EP van a ARL
+      if (reg.origen === 'AT' || reg.origen === 'EP') {
+        resultado.estado = 'Corresponde a ARL';
+        resultado.subestado = 'Gestionar con ARL';
+        return resultado;
+      }
+      
+      // 2. Prescripción
+      const diasDesdeInicio = Math.floor((hoy - fechaInicial) / (1000 * 60 * 60 * 24));
+      const configPrescripcion = parseInt(document.getElementById('configDiasPrescripcion')?.value || '1080');
+      if (diasDesdeInicio > configPrescripcion) {
+        resultado.estado = 'Prescrita – Sin reconocimiento';
+        resultado.subestado = `Mayor a ${configPrescripcion} días`;
+        return resultado;
+      }
+      
+      // 3. Relación laboral
+      if (reg.origen === 'EG') {
+        const diasRelacion = Math.floor((fechaInicial - fechaAfiliacion) / (1000 * 60 * 60 * 24));
+        const configRelacion = parseInt(document.getElementById('configDiasRelacion')?.value || '60');
+        if (diasRelacion < configRelacion) {
+          resultado.estado = 'Sin reconocimiento';
+          resultado.subestado = `Menos de ${configRelacion} días de relación`;
+          return resultado;
+        }
+      }
+      
+      const sml = SMLV[reg.anio] || SMLV[2025];
+      const valorDiario = reg.ibc / 30;
+      
+      // EG
+      if (reg.origen === 'EG') {
+        if (reg.tipo === 'Nueva') {
+          const diasPagar = Math.max(0, reg.dias - 2);
+          resultado.total = (diasPagar / 30) * sml;
+          resultado.estado = 'Liquidar';
+          resultado.subestado = `Nueva - ${diasPagar} días a SMLV`;
+        } else {
+          const relacionIBC = reg.ibc / sml;
+          if (reg.dias <= 89) {
+            if (relacionIBC > 1.5) {
+              resultado.total = valorDiario * 0.6667 * reg.dias;
+              resultado.subestado = 'Prórroga 1-89 días >1.5 SMLV - 66.67%';
+            } else {
+              resultado.total = valorDiario * reg.dias;
+              resultado.subestado = 'Prórroga 1-89 días ≤1.5 SMLV - 100% IBC';
+            }
+          } else if (reg.dias <= 180) {
+            if (relacionIBC > 2) {
+              resultado.total = valorDiario * 0.5 * reg.dias;
+              resultado.subestado = 'Prórroga 90-180 días >2 SMLV - 50%';
+            } else {
+              resultado.total = valorDiario * reg.dias;
+              resultado.subestado = 'Prórroga 90-180 días ≤2 SMLV - 100% IBC';
+            }
+          } else {
+            resultado.total = valorDiario * reg.dias;
+            resultado.subestado = 'Prórroga >180 días - 100% IBC';
+          }
+          resultado.estado = 'Liquidar';
+        }
+      }
+      
+      // Licencias
+      else if (reg.origen === 'LM' || reg.origen === 'LP') {
+        const mesesRelacion = Math.floor((fechaInicial - fechaAfiliacion) / (1000 * 60 * 60 * 24 * 30));
+        if (mesesRelacion >= 9) {
+          resultado.total = valorDiario * reg.dias;
+          resultado.estado = 'Liquidación total';
+          resultado.subestado = `≥9 meses (${mesesRelacion}) - 100% IBC`;
+        } else {
+          resultado.total = valorDiario * reg.dias * 0.5;
+          resultado.estado = 'Liquidación proporcional';
+          resultado.subestado = `<9 meses (${mesesRelacion}) - 50% IBC`;
+        }
+      }
+      
+      return resultado;
+    }
+    
+    // ==================== REGISTRO ====================
+    function obtenerDatosFormulario() {
+      return {
+        nit: document.getElementById('nit').value,
+        empresa: document.getElementById('empresa').value,
+        documento: document.getElementById('documento').value,
+        nombre: document.getElementById('nombre').value,
+        fechaInicial: document.getElementById('fechaInicial').value,
+        fechaFinal: document.getElementById('fechaFinal').value,
+        dias: parseInt(document.getElementById('dias').value) || 0,
+        diasAcumulados: parseInt(document.getElementById('diasAcumulados').value) || 0,
+        anio: parseInt(document.getElementById('anio').value),
+        origen: document.getElementById('origen').value,
+        tipo: document.getElementById('tipo').value,
+        ibc: parseFloat(document.getElementById('ibc').value) || 0,
+        fechaAfiliacion: document.getElementById('fechaAfiliacion').value,
+        fechaRetiro: document.getElementById('fechaRetiro').value,
+        estadoEmpresa: document.getElementById('estadoEmpresa').value
+      };
+    }
+    
+    function guardarRegistro() {
+      const reg = obtenerDatosFormulario();
+      if (!reg.nombre || !reg.documento || !reg.fechaInicial || !reg.ibc) {
+        mostrarAlerta('Complete los campos obligatorios', 'error');
+        return;
+      }
+      
+      const resultado = calcularIncapacidad(reg);
+      reg.total = resultado.total;
+      reg.estado = resultado.estado;
+      reg.subestado = resultado.subestado;
+      reg.id = generarId();
+      reg.fechaRegistro = new Date().toISOString();
+      
+      registros.push(reg);
+      guardarDatos();
+      registrarAuditoria('CREAR', `Registro creado: ${reg.nombre} - $${formatearNumero(reg.total)}`);
+      
+      mostrarAlerta('Registro guardado exitosamente', 'success');
+      limpiarFormulario();
+      showView('consulta');
+    }
+    
+    function limpiarFormulario() {
+      document.getElementById('nit').value = '';
+      document.getElementById('empresa').value = '';
+      document.getElementById('documento').value = '';
+      document.getElementById('nombre').value = '';
+      document.getElementById('fechaInicial').value = '';
+      document.getElementById('fechaFinal').value = '';
+      document.getElementById('dias').value = '';
+      document.getElementById('diasAcumulados').value = '0';
+      document.getElementById('anio').value = '2025';
+      document.getElementById('origen').value = 'EG';
+      document.getElementById('tipo').value = 'Nueva';
+      document.getElementById('ibc').value = '1500000';
+      document.getElementById('fechaAfiliacion').value = '';
+      document.getElementById('fechaRetiro').value = '';
+      document.getElementById('estadoEmpresa').value = 'ACTIVO';
+      
+      document.getElementById('resultadoTotal').textContent = '$0';
+      document.getElementById('resultadoEstado').innerHTML = '<span class="result-badge badge-info">Pendiente</span>';
+      document.getElementById('detalleCalculo').textContent = 'Complete los campos';
+      document.getElementById('progressCalculo').style.width = '0%';
+    }
+    
+    // ==================== DASHBOARD ====================
+    function actualizarDashboard() {
+      document.getElementById('totalIncapacidades').textContent = registros.length;
+      
+      const totalLiquidado = registros.reduce((sum, r) => sum + (r.total || 0), 0);
+      document.getElementById('totalLiquidado').textContent = `$${formatearNumero(totalLiquidado)}`;
+      
+      const porLiquidar = registros.filter(r => r.estado === 'Liquidar').length;
+      document.getElementById('porLiquidar').textContent = porLiquidar;
+      
+      const prescritas = registros.filter(r => r.estado?.includes('Prescrita')).length;
+      document.getElementById('prescritas').textContent = prescritas;
+      
+      // Últimos registros
+      const ultimos = registros.slice(-5).reverse();
+      let html = '';
+      ultimos.forEach(r => {
+        html += `<tr>
+          <td>${r.empresa || '-'}</td>
+          <td>${r.documento || '-'}</td>
+          <td>${r.nombre || '-'}</td>
+          <td>${obtenerNombreOrigen(r.origen)}</td>
+          <td>${r.dias}</td>
+          <td>$${formatearNumero(r.total)}</td>
+          <td><span class="badge ${getBadgeClass(r.estado)}">${r.estado}</span></td>
+        </tr>`;
+      });
+      document.getElementById('ultimosRegistros').innerHTML = html;
+      
+      // Gráfico
+      if (chartResumen) chartResumen.destroy();
+      
+      const ctx = document.getElementById('graficoResumen').getContext('2d');
+      const origenCount = { EG: 0, AT: 0, EP: 0, LM: 0, LP: 0 };
+      registros.forEach(r => {
+        if (origenCount.hasOwnProperty(r.origen)) origenCount[r.origen]++;
+      });
+      
+      chartResumen = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['EG', 'AT', 'EP', 'LM', 'LP'],
+          datasets: [{
+            label: 'Cantidad por Origen',
+            data: Object.values(origenCount),
+            backgroundColor: ['#4f46e5', '#f59e0b', '#ef4444', '#10b981', '#3b82f6'],
+            borderRadius: 8
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: { backgroundColor: '#1f2937' }
+          },
+          scales: {
+            y: { grid: { color: '#e5e7eb' } }
+          }
+        }
+      });
+    }
+    
+    function cambiarPeriodo(periodo) {
+      mostrarAlerta(`Cambiando a período: ${periodo}`, 'info');
+      // Aquí iría la lógica real de filtrado
+    }
+    
+    // ==================== CONSULTA ====================
+    function cargarConsulta() {
+      registrosFiltrados = [...registros];
+      paginaActual = 1;
+      renderizarConsulta();
+    }
+    
+    function aplicarFiltros() {
+      const filtroEmpresa = document.getElementById('filtroEmpresa').value.toLowerCase();
+      const filtroDocumento = document.getElementById('filtroDocumento').value.toLowerCase();
+      const filtroNombre = document.getElementById('filtroNombre').value.toLowerCase();
+      const filtroOrigen = document.getElementById('filtroOrigen').value;
+      const filtroEstado = document.getElementById('filtroEstado').value;
+      const filtroAnio = document.getElementById('filtroAnio').value;
+      
+      registrosFiltrados = registros.filter(r => {
+        if (filtroEmpresa && !r.empresa?.toLowerCase().includes(filtroEmpresa)) return false;
+        if (filtroDocumento && !r.documento?.toLowerCase().includes(filtroDocumento)) return false;
+        if (filtroNombre && !r.nombre?.toLowerCase().includes(filtroNombre)) return false;
+        if (filtroOrigen && r.origen !== filtroOrigen) return false;
+        if (filtroEstado && r.estado !== filtroEstado) return false;
+        if (filtroAnio && r.anio !== parseInt(filtroAnio)) return false;
+        return true;
+      });
+      
+      paginaActual = 1;
+      renderizarConsulta();
+      mostrarAlerta(`Filtros aplicados: ${registrosFiltrados.length} resultados`, 'success');
+    }
+    
+    function limpiarFiltrosConsulta() {
+      document.getElementById('filtroEmpresa').value = '';
+      document.getElementById('filtroDocumento').value = '';
+      document.getElementById('filtroNombre').value = '';
+      document.getElementById('filtroOrigen').value = '';
+      document.getElementById('filtroEstado').value = '';
+      document.getElementById('filtroAnio').value = '';
+      registrosFiltrados = [...registros];
+      paginaActual = 1;
+      renderizarConsulta();
+    }
+    
+    function renderizarConsulta() {
+      const inicio = (paginaActual - 1) * 10;
+      const fin = Math.min(inicio + 10, registrosFiltrados.length);
+      const paginados = registrosFiltrados.slice(inicio, fin);
+      
+      let html = '';
+      paginados.forEach(r => {
+        html += `<tr>
+          <td>${r.id?.substring(0, 6) || ''}</td>
+          <td>${r.empresa || '-'}</td>
+          <td>${r.documento || '-'}</td>
+          <td>${r.nombre || '-'}</td>
+          <td>${r.dias}</td>
+          <td>$${formatearNumero(r.ibc)}</td>
+          <td>$${formatearNumero(r.total)}</td>
+          <td><span class="badge ${getBadgeClass(r.estado)}">${r.estado || ''}</span></td>
+          <td>
+            <button class="btn btn-sm btn-primary" onclick="verDetalle('${r.id}')">
+              <i class="fas fa-eye"></i>
+            </button>
+            <button class="btn btn-sm btn-danger" onclick="eliminarRegistro('${r.id}')">
+              <i class="fas fa-trash"></i>
+            </button>
+          </td>
+        </tr>`;
+      });
+      
+      document.getElementById('tablaConsulta').innerHTML = html || '<tr><td colspan="9" style="text-align:center; padding: 40px;">No hay registros</td></tr>';
+      document.getElementById('paginacionInfo').textContent = `Mostrando ${inicio+1}-${fin} de ${registrosFiltrados.length} registros`;
+    }
+    
+    function cambiarPagina(direccion) {
+      const totalPaginas = Math.ceil(registrosFiltrados.length / 10);
+      if (direccion === 'next' && paginaActual < totalPaginas) {
+        paginaActual++;
+      } else if (direccion === 'prev' && paginaActual > 1) {
+        paginaActual--;
+      }
+      renderizarConsulta();
+    }
+    
+    function verDetalle(id) {
+      const r = registros.find(r => r.id === id);
+      if (!r) return;
+      
+      Swal.fire({
+        title: 'Detalle de Incapacidad',
+        html: `
+          <div style="text-align: left;">
+            <p><strong>ID:</strong> ${r.id}</p>
+            <p><strong>Empresa:</strong> ${r.empresa}</p>
+            <p><strong>Documento:</strong> ${r.documento}</p>
+            <p><strong>Nombre:</strong> ${r.nombre}</p>
+            <p><strong>Fechas:</strong> ${r.fechaInicial} al ${r.fechaFinal}</p>
+            <p><strong>Días:</strong> ${r.dias}</p>
+            <p><strong>Origen:</strong> ${obtenerNombreOrigen(r.origen)}</p>
+            <p><strong>IBC:</strong> $${formatearNumero(r.ibc)}</p>
+            <p><strong>Total:</strong> $${formatearNumero(r.total)}</p>
+            <p><strong>Estado:</strong> ${r.estado}</p>
+            <p><strong>Detalle:</strong> ${r.subestado || ''}</p>
+            <p><strong>Registro:</strong> ${new Date(r.fechaRegistro).toLocaleString()}</p>
+          </div>
+        `,
+        icon: 'info',
+        confirmButtonColor: '#4f46e5'
+      });
+    }
+    
+    function eliminarRegistro(id) {
+      Swal.fire({
+        title: '¿Eliminar registro?',
+        text: 'Esta acción no se puede deshacer',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ef4444',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'Sí, eliminar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          registros = registros.filter(r => r.id !== id);
+          guardarDatos();
+          registrarAuditoria('ELIMINAR', `Registro eliminado: ${id}`);
+          cargarConsulta();
+          mostrarAlerta('Registro eliminado', 'success');
+        }
+      });
+    }
+    
+    function exportarConsultaExcel() {
+      const ws = XLSX.utils.json_to_sheet(registrosFiltrados);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Consulta');
+      XLSX.writeFile(wb, `consulta_${new Date().toISOString().split('T')[0]}.xlsx`);
+      mostrarAlerta('Archivo Excel generado', 'success');
+    }
+    
+    function exportarConsultaPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      
+      doc.text('Reporte de Incapacidades', 14, 20);
+      doc.text(`Generado: ${new Date().toLocaleString()}`, 14, 30);
+      
+      const columns = ['Empresa', 'Documento', 'Nombre', 'Días', 'Total'];
+      const data = registrosFiltrados.slice(0, 20).map(r => [
+        r.empresa || '',
+        r.documento || '',
+        r.nombre || '',
+        r.dias,
+        `$${formatearNumero(r.total)}`
+      ]);
+      
+      doc.autoTable({
+        head: [columns],
+        body: data,
+        startY: 40,
+        theme: 'grid',
+        styles: { fontSize: 8 },
+        headStyles: { fillColor: [79, 70, 229] }
+      });
+      
+      doc.save(`consulta_${new Date().toISOString().split('T')[0]}.pdf`);
+      mostrarAlerta('Archivo PDF generado', 'success');
+    }
+    
+    // ==================== CARGAR ARCHIVOS ====================
+    function procesarArchivo(input) {
+      const file = input.files[0];
+      if (!file) return;
+      
+      const reader = new FileReader();
+      
+      reader.onload = function(e) {
+        try {
+          if (file.name.endsWith('.txt') || file.name.endsWith('.csv')) {
+            const contenido = e.target.result;
+            procesarTXT(contenido);
+          } else {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+            const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+            const json = XLSX.utils.sheet_to_json(firstSheet);
+            procesarJSON(json);
+          }
+        } catch (error) {
+          mostrarAlerta('Error al procesar: ' + error.message, 'error');
+        }
+      };
+      
+      if (file.name.endsWith('.txt') || file.name.endsWith('.csv')) {
+        reader.readAsText(file);
+      } else {
+        reader.readAsArrayBuffer(file);
+      }
+    }
+    
+    function procesarTXT(contenido) {
+      const lineas = contenido.split('\n');
+      const headers = lineas[0].split('\t');
+      const datos = [];
+      
+      for (let i = 1; i < lineas.length; i++) {
+        if (lineas[i].trim()) {
+          const valores = lineas[i].split('\t');
+          const fila = {};
+          headers.forEach((h, idx) => {
+            fila[h.trim()] = valores[idx]?.trim() || '';
+          });
+          datos.push(fila);
+        }
+      }
+      
+      procesarJSON(datos);
+    }
+    
+    function procesarJSON(datos) {
+      archivoCargado = datos;
+      
+      const thead = document.querySelector('#tablaPreview thead');
+      const tbody = document.querySelector('#tablaPreview tbody');
+      
+      if (datos.length > 0) {
+        let headerHtml = '<tr>';
+        Object.keys(datos[0]).forEach(key => {
+          headerHtml += `<th>${key}</th>`;
+        });
+        headerHtml += '</tr>';
+        thead.innerHTML = headerHtml;
+        
+        let bodyHtml = '';
+        datos.slice(0, 5).forEach(fila => {
+          bodyHtml += '<tr>';
+          Object.values(fila).forEach(val => {
+            bodyHtml += `<td>${val}</td>`;
+          });
+          bodyHtml += '</tr>';
+        });
+        tbody.innerHTML = bodyHtml;
+      }
+      
+      document.getElementById('totalRegistros').textContent = datos.length;
+      document.getElementById('progressBar').style.width = '100%';
+      document.getElementById('previewCarga').classList.remove('hidden');
+      mostrarAlerta(`${datos.length} registros listos para cargar`, 'info');
+    }
+    
+    function confirmarCarga() {
+      if (!archivoCargado) return;
+      
+      let procesados = 0;
+      let errores = 0;
+      
+      archivoCargado.forEach(fila => {
+        try {
+          const registro = procesarFilaArchivo(fila);
+          if (registro) {
+            registros.push(registro);
+            procesados++;
+          }
+        } catch (e) {
+          errores++;
+        }
+      });
+      
+      guardarDatos();
+      registrarAuditoria('CARGA MASIVA', `${procesados} registros cargados, ${errores} errores`);
+      mostrarAlerta(`Carga completada: ${procesados} registros, ${errores} errores`, procesados > 0 ? 'success' : 'warning');
+      document.getElementById('previewCarga').classList.add('hidden');
+      archivoCargado = null;
+      document.getElementById('progressBar').style.width = '0%';
+      showView('dashboard');
+    }
+    
+    function cancelarCarga() {
+      archivoCargado = null;
+      document.getElementById('previewCarga').classList.add('hidden');
+      document.getElementById('fileInput').value = '';
+      document.getElementById('progressBar').style.width = '0%';
+    }
+    
+    function procesarFilaArchivo(fila) {
+      const registro = {
+        id: generarId(),
+        nit: fila['NIT'] || '',
+        empresa: fila['EMPRESA'] || '',
+        documento: fila['DOCUMENTO'] || '',
+        nombre: fila['NOMBRE'] || '',
+        fechaInicial: convertirFecha(fila['FECHA INICIAL']),
+        fechaFinal: convertirFecha(fila['FECHA FINAL']),
+        dias: parseInt(fila['DIAS']) || 0,
+        diasAcumulados: parseInt(fila['DIAS ACUMULADOS']) || 0,
+        anio: parseInt(fila['AÑO']) || new Date().getFullYear(),
+        origen: normalizarOrigen(fila['ORIGEN DE INCAPACIDAD'] || fila['ORIGEN']),
+        ibc: parseFloat(fila['IBC']) || 0,
+        fechaAfiliacion: convertirFecha(fila['FECHA AFILIACION EPS - RELACION LABORAL'] || fila['FECHA AFILIACION']),
+        fechaRetiro: convertirFecha(fila['FECHA RETIRO EPS'] || fila['FECHA RETIRO']),
+        estadoEmpresa: fila['ESTADO EMPRESA'] || 'ACTIVO',
+        fechaRegistro: new Date().toISOString()
+      };
+      
+      const resultado = calcularIncapacidad(registro);
+      registro.total = resultado.total;
+      registro.estado = resultado.estado;
+      registro.subestado = resultado.subestado;
+      
+      return registro;
+    }
+    
+    function normalizarOrigen(origen) {
+      const mapa = {
+        'Enfermedad General': 'EG',
+        'Accidente de Trabajo': 'AT',
+        'Enfermedad Profesional': 'EP',
+        'Maternidad': 'LM',
+        'Paternidad': 'LP',
+        'EG': 'EG', 'AT': 'AT', 'EP': 'EP', 'LM': 'LM', 'LP': 'LP'
+      };
+      return mapa[origen?.trim()] || 'EG';
+    }
+    
+    function convertirFecha(fechaStr) {
+      if (!fechaStr) return null;
+      if (fechaStr.includes('/')) {
+        const partes = fechaStr.split('/');
+        if (partes.length === 3) {
+          if (partes[2].length === 4) return `${partes[2]}-${partes[1].padStart(2,'0')}-${partes[0].padStart(2,'0')}`;
+        }
+      }
+      return fechaStr;
+    }
+    
+    // ==================== REPORTES ====================
+    function cargarEmpresasReporte() {
+      const empresas = [...new Set(registros.map(r => r.empresa).filter(Boolean))];
+      const select = document.getElementById('reporteEmpresa');
+      select.innerHTML = '<option value="">Todas las empresas</option>' + 
+        empresas.map(emp => `<option value="${emp}">${emp}</option>`).join('');
+    }
+    
+    function cambiarTipoReporte() {
+      // Implementar según necesidades
+    }
+    
+    function generarReporte() {
+      const empresa = document.getElementById('reporteEmpresa').value;
+      const tipo = document.getElementById('tipoReporte').value;
+      const periodo = document.getElementById('periodoReporte').value;
+      const formato = document.getElementById('formatoReporte').value;
+      
+      let datosFiltrados = [...registros];
+      
+      // Filtrar por empresa
+      if (empresa) datosFiltrados = datosFiltrados.filter(r => r.empresa === empresa);
+      
+      // Filtrar por período
+      const hoy = new Date();
+      if (periodo === 'hoy') {
+        const hoyStr = hoy.toISOString().split('T')[0];
+        datosFiltrados = datosFiltrados.filter(r => r.fechaRegistro?.startsWith(hoyStr));
+      } else if (periodo === 'semana') {
+        const semanaAtras = new Date(hoy.setDate(hoy.getDate() - 7));
+        datosFiltrados = datosFiltrados.filter(r => new Date(r.fechaRegistro) >= semanaAtras);
+      } else if (periodo === 'mes') {
+        const mesAtras = new Date(hoy.setMonth(hoy.getMonth() - 1));
+        datosFiltrados = datosFiltrados.filter(r => new Date(r.fechaRegistro) >= mesAtras);
+      }
+      
+      // Filtrar por tipo
+      if (tipo === 'prescritas') datosFiltrados = datosFiltrados.filter(r => r.estado?.includes('Prescrita'));
+      else if (tipo === 'sinreconocimiento') datosFiltrados = datosFiltrados.filter(r => r.estado === 'Sin reconocimiento');
+      else if (tipo === 'recobro') datosFiltrados = datosFiltrados.filter(r => ['Liquidar', 'Liquidación total', 'Liquidación proporcional'].includes(r.estado));
+      else if (tipo === 'porOrigen') {
+        // Agrupar por origen
+        const grupos = {};
+        datosFiltrados.forEach(r => {
+          if (!grupos[r.origen]) grupos[r.origen] = [];
+          grupos[r.origen].push(r);
+        });
+        // Mostrar en tabla separada
+      }
+      
+      renderizarTablaReporte(datosFiltrados);
+      actualizarGraficoReporte(datosFiltrados);
+      registrarAuditoria('REPORTE', `Reporte generado: ${tipo} - ${datosFiltrados.length} registros`);
+      mostrarAlerta(`Reporte generado con ${datosFiltrados.length} registros`, 'success');
+    }
+    
+    function renderizarTablaReporte(datos) {
+      let html = '';
+      let totalGeneral = 0;
+      
+      datos.forEach(r => {
+        totalGeneral += r.total || 0;
+        html += `<tr>
+          <td>${r.empresa || '-'}</td>
+          <td>${r.documento || '-'}</td>
+          <td>${r.nombre || '-'}</td>
+          <td>${obtenerNombreOrigen(r.origen)}</td>
+          <td>${r.dias}</td>
+          <td>$${formatearNumero(r.ibc)}</td>
+          <td>$${formatearNumero(r.total)}</td>
+          <td><span class="badge ${getBadgeClass(r.estado)}">${r.estado}</span></td>
+        </tr>`;
+      });
+      
+      document.querySelector('#tablaReporte tbody').innerHTML = html;
+      document.getElementById('totalGeneralReporte').textContent = `$${formatearNumero(totalGeneral)}`;
+    }
+    
+    function actualizarGraficoReporte(datos) {
+      if (chartReporte) chartReporte.destroy();
+      
+      const porOrigen = { EG: 0, AT: 0, EP: 0, LM: 0, LP: 0 };
+      datos.forEach(r => {
+        if (porOrigen.hasOwnProperty(r.origen)) porOrigen[r.origen]++;
+      });
+      
+      const ctx = document.getElementById('graficoReporte').getContext('2d');
+      chartReporte = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: Object.keys(porOrigen).map(o => obtenerNombreOrigen(o)),
+          datasets: [{
+            data: Object.values(porOrigen),
+            backgroundColor: ['#4f46e5', '#f59e0b', '#ef4444', '#10b981', '#3b82f6'],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'bottom' }
+          }
+        }
+      });
+    }
+    
+    function enviarPorCorreo() {
+      const correo = document.getElementById('correoSupervisor')?.value || 'admin@laki.com';
+      if (!correo) {
+        mostrarAlerta('Ingrese correo', 'error');
+        return;
+      }
+      mostrarAlerta(`Reporte enviado a ${correo}`, 'success');
+    }
+    
+    function programarReporte() {
+      mostrarAlerta('Reporte programado para envío diario', 'info');
+    }
+    
+    function exportarReporteExcel() {
+      const datos = [];
+      document.querySelectorAll('#tablaReporte tbody tr').forEach(row => {
+        const cells = row.querySelectorAll('td');
+        datos.push({
+          Empresa: cells[0].textContent,
+          Documento: cells[1].textContent,
+          Nombre: cells[2].textContent,
+          Origen: cells[3].textContent,
+          Días: cells[4].textContent,
+          IBC: cells[5].textContent,
+          Total: cells[6].textContent,
+          Estado: cells[7].textContent
+        });
+      });
+      
+      const ws = XLSX.utils.json_to_sheet(datos);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Reporte');
+      XLSX.writeFile(wb, `reporte_${new Date().toISOString().split('T')[0]}.xlsx`);
+      mostrarAlerta('Archivo Excel generado', 'success');
+    }
+    
+    // ==================== ASIGNACIONES ====================
+    function cargarTareas() {
+      const select = document.getElementById('asignarAuxiliar');
+      const auxiliares = usuarios.filter(u => u.rol === 'auxiliar' || u.rol === 'analista');
+      select.innerHTML = '<option value="">Seleccionar</option>' + 
+        auxiliares.map(a => `<option value="${a.username}">${a.nombre}</option>`).join('');
+      
+      let html = '';
+      tareas.slice(0, 10).forEach(t => {
+        html += `<tr>
+          <td>${t.auxiliar}</td>
+          <td>${t.descripcion}</td>
+          <td><span class="badge ${getPrioridadClass(t.prioridad)}">${t.prioridad}</span></td>
+          <td>${t.fechaLimite || '-'}</td>
+          <td><span class="badge ${t.estado === 'pendiente' ? 'badge-warning' : 'badge-success'}">${t.estado}</span></td>
+          <td>
+            <button class="btn btn-sm btn-success" onclick="completarTarea('${t.id}')">
+              <i class="fas fa-check"></i>
+            </button>
+          </td>
+        </tr>`;
+      });
+      document.getElementById('tablaTareas').innerHTML = html;
+    }
+    
+    function asignarTarea() {
+      const tarea = {
+        id: generarId(),
+        auxiliar: document.getElementById('asignarAuxiliar').value,
+        tipo: document.getElementById('tipoTarea').value,
+        prioridad: document.getElementById('prioridadTarea').value,
+        fechaLimite: document.getElementById('fechaLimite').value,
+        descripcion: document.getElementById('descripcionTarea').value,
+        estado: 'pendiente',
+        fechaAsignacion: new Date().toISOString(),
+        creador: usuarioActual?.username
+      };
+      
+      if (!tarea.auxiliar || !tarea.descripcion) {
+        mostrarAlerta('Complete los campos', 'error');
+        return;
+      }
+      
+      tareas.push(tarea);
+      guardarTareas();
+      registrarAuditoria('TAREA', `Tarea asignada a ${tarea.auxiliar}`);
+      cargarTareas();
+      
+      document.getElementById('asignarAuxiliar').value = '';
+      document.getElementById('descripcionTarea').value = '';
+      document.getElementById('fechaLimite').value = '';
+      
+      mostrarAlerta('Tarea asignada exitosamente', 'success');
+    }
+    
+    function completarTarea(id) {
+      const tarea = tareas.find(t => t.id === id);
+      if (tarea) {
+        tarea.estado = 'completada';
+        guardarTareas();
+        cargarTareas();
+        mostrarAlerta('Tarea completada', 'success');
+      }
+    }
+    
+    function getPrioridadClass(p) {
+      return { 'alta': 'badge-danger', 'media': 'badge-warning', 'baja': 'badge-info' }[p] || 'badge-info';
+    }
+    
+    // ==================== ADMIN USUARIOS ====================
+    function cargarUsuarios() {
+      let html = '';
+      usuarios.forEach(u => {
+        html += `<tr>
+          <td>${u.username}</td>
+          <td>${u.nombre}</td>
+          <td>${obtenerNombreRol(u.rol)}</td>
+          <td><span class="badge ${u.estado === 'activo' ? 'badge-success' : 'badge-danger'}">${u.estado}</span></td>
+          <td>${u.ultimoAcceso || 'Nunca'}</td>
+          <td>${u.passwordExpiry ? new Date(u.passwordExpiry).toLocaleDateString() : 'N/A'}</td>
+          <td>
+            <button class="btn btn-sm btn-primary" onclick="editarUsuario('${u.username}')">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="btn btn-sm btn-danger" onclick="eliminarUsuario('${u.username}')">
+              <i class="fas fa-trash"></i>
+            </button>
+          </td>
+        </tr>`;
+      });
+      document.getElementById('tablaUsuarios').innerHTML = html;
+    }
+    
+    function mostrarModalUsuario() {
+      document.getElementById('modalTitulo').textContent = 'Nuevo Usuario';
+      document.getElementById('modalUsername').value = '';
+      document.getElementById('modalNombre').value = '';
+      document.getElementById('modalPassword').value = '';
+      document.getElementById('modalRol').value = 'auxiliar';
+      document.getElementById('modalEstado').value = 'activo';
+      document.getElementById('modalUsuario').style.display = 'flex';
+    }
+    
+    function cerrarModalUsuario() {
+      document.getElementById('modalUsuario').style.display = 'none';
+    }
+    
+    function guardarUsuario() {
+      const usuario = {
+        id: usuarios.length + 1,
+        username: document.getElementById('modalUsername').value,
+        nombre: document.getElementById('modalNombre').value,
+        password: document.getElementById('modalPassword').value,
+        rol: document.getElementById('modalRol').value,
+        estado: document.getElementById('modalEstado').value,
+        passwordExpiry: new Date().setDate(new Date().getDate() + 30)
+      };
+      
+      if (!usuario.username || !usuario.nombre || !usuario.password) {
+        mostrarAlerta('Todos los campos son obligatorios', 'error');
+        return;
+      }
+      
+      if (usuarios.some(u => u.username === usuario.username)) {
+        mostrarAlerta('El nombre de usuario ya existe', 'error');
+        return;
+      }
+      
+      usuarios.push(usuario);
+      guardarUsuarios();
+      registrarAuditoria('USUARIO', `Usuario creado: ${usuario.username}`);
+      cargarUsuarios();
+      cerrarModalUsuario();
+      mostrarAlerta('Usuario creado exitosamente', 'success');
+    }
+    
+    function editarUsuario(username) {
+      const usuario = usuarios.find(u => u.username === username);
+      if (!usuario) return;
+      
+      document.getElementById('modalTitulo').textContent = 'Editar Usuario';
+      document.getElementById('modalUsername').value = usuario.username;
+      document.getElementById('modalUsername').readOnly = true;
+      document.getElementById('modalNombre').value = usuario.nombre;
+      document.getElementById('modalPassword').value = '';
+      document.getElementById('modalRol').value = usuario.rol;
+      document.getElementById('modalEstado').value = usuario.estado;
+      document.getElementById('modalUsuario').style.display = 'flex';
+      
+      // Guardar cambios
+      window.guardarEdicion = function() {
+        usuario.nombre = document.getElementById('modalNombre').value;
+        if (document.getElementById('modalPassword').value) {
+          usuario.password = document.getElementById('modalPassword').value;
+        }
+        usuario.rol = document.getElementById('modalRol').value;
+        usuario.estado = document.getElementById('modalEstado').value;
+        
+        guardarUsuarios();
+        registrarAuditoria('USUARIO', `Usuario editado: ${usuario.username}`);
+        cargarUsuarios();
+        cerrarModalUsuario();
+        mostrarAlerta('Usuario actualizado', 'success');
+      };
+    }
+    
+    function eliminarUsuario(username) {
+      if (username === 'admin') {
+        mostrarAlerta('No se puede eliminar al usuario admin', 'error');
+        return;
+      }
+      
+      Swal.fire({
+        title: '¿Eliminar usuario?',
+        text: `El usuario ${username} será eliminado permanentemente`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ef4444',
+        confirmButtonText: 'Sí, eliminar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          usuarios = usuarios.filter(u => u.username !== username);
+          guardarUsuarios();
+          registrarAuditoria('USUARIO', `Usuario eliminado: ${username}`);
+          cargarUsuarios();
+          mostrarAlerta('Usuario eliminado', 'success');
+        }
+      });
+    }
+    
+    // ==================== AUDITORÍA ====================
+    function cargarAuditoria() {
+      let html = '';
+      auditoria.slice(0, 50).forEach(a => {
+        html += `<tr>
+          <td>${new Date(a.fecha).toLocaleString()}</td>
+          <td>${a.usuario}</td>
+          <td><span class="badge badge-info">${a.accion}</span></td>
+          <td>${a.detalle}</td>
+          <td>${a.ip || '127.0.0.1'}</td>
+        </tr>`;
+      });
+      document.getElementById('tablaAuditoria').innerHTML = html || '<tr><td colspan="5" style="text-align:center;">No hay registros</td></tr>';
+    }
+    
+    function registrarAuditoria(accion, detalle) {
+      auditoria.unshift({
+        fecha: new Date().toISOString(),
+        usuario: usuarioActual?.username || 'Sistema',
+        accion: accion,
+        detalle: detalle,
+        ip: '127.0.0.1'
+      });
+      
+      if (auditoria.length > 100) auditoria = auditoria.slice(0, 100);
+      localStorage.setItem('incapacidades_auditoria', JSON.stringify(auditoria));
+    }
+    
+    // ==================== BACKUP ====================
+    function crearBackup() {
+      const backup = {
+        fecha: new Date().toISOString(),
+        registros: registros,
+        usuarios: usuarios,
+        tareas: tareas,
+        auditoria: auditoria
+      };
+      
+      const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `backup_${new Date().toISOString().split('T')[0]}.json`;
+      a.click();
+      
+      registrarAuditoria('BACKUP', 'Backup creado');
+      mostrarAlerta('Backup creado exitosamente', 'success');
+    }
+    
+    function restaurarBackup() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.json';
+      input.onchange = function(e) {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          try {
+            const backup = JSON.parse(e.target.result);
+            registros = backup.registros || [];
+            usuarios = backup.usuarios || [];
+            tareas = backup.tareas || [];
+            auditoria = backup.auditoria || [];
+            
+            guardarDatos();
+            guardarUsuarios();
+            guardarTareas();
+            localStorage.setItem('incapacidades_auditoria', JSON.stringify(auditoria));
+            
+            registrarAuditoria('RESTORE', 'Base de datos restaurada');
+            mostrarAlerta('Backup restaurado exitosamente', 'success');
+            location.reload();
+          } catch (error) {
+            mostrarAlerta('Error al restaurar backup', 'error');
+          }
+        };
+        reader.readAsText(file);
+      };
+      input.click();
+    }
+    
+    function programarBackup() {
+      mostrarAlerta('Backup programado para las 2:00 AM', 'info');
+    }
+    
+    // ==================== CONFIGURACIÓN ====================
+    function guardarConfiguracion() {
+      const config = {
+        SMLV: {
+          2026: parseFloat(document.getElementById('configSMLV2026').value),
+          2025: parseFloat(document.getElementById('configSMLV2025').value),
+          2024: parseFloat(document.getElementById('configSMLV2024').value),
+          2023: parseFloat(document.getElementById('configSMLV2023').value)
+        },
+        diasPrescripcion: parseInt(document.getElementById('configDiasPrescripcion').value),
+        diasRelacion: parseInt(document.getElementById('configDiasRelacion').value),
+        porcentajeEG: parseFloat(document.getElementById('configPorcEG').value),
+        email: document.getElementById('configEmail').value
+      };
+      
+      localStorage.setItem('incapacidades_config', JSON.stringify(config));
+      
+      // Actualizar SMLV global
+      SMLV[2026] = config.SMLV[2026];
+      SMLV[2025] = config.SMLV[2025];
+      SMLV[2024] = config.SMLV[2024];
+      SMLV[2023] = config.SMLV[2023];
+      
+      registrarAuditoria('CONFIG', 'Configuración actualizada');
+      mostrarAlerta('Configuración guardada', 'success');
+    }
+    
+    function resetearConfiguracion() {
+      if (confirm('¿Restablecer configuración por defecto?')) {
+        document.getElementById('configSMLV2026').value = '1750950';
+        document.getElementById('configSMLV2025').value = '1423500';
+        document.getElementById('configSMLV2024').value = '1300000';
+        document.getElementById('configSMLV2023').value = '1116000';
+        document.getElementById('configDiasPrescripcion').value = '1080';
+        document.getElementById('configDiasRelacion').value = '60';
+        document.getElementById('configPorcEG').value = '66.67';
+        document.getElementById('configEmail').value = 'admin@laki.com';
+        
+        mostrarAlerta('Configuración restablecida', 'success');
+      }
+    }
+    
+    // ==================== UTILIDADES ====================
+    function generarId() {
+      return Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
+    }
+    
+    function guardarDatos() {
+      localStorage.setItem('incapacidades_registros', JSON.stringify(registros));
+    }
+    
+    function guardarUsuarios() {
+      localStorage.setItem('incapacidades_usuarios', JSON.stringify(usuarios));
+    }
+    
+    function guardarTareas() {
+      localStorage.setItem('incapacidades_tareas', JSON.stringify(tareas));
+    }
+    
+    function formatearNumero(num) {
+      if (!num && num !== 0) return '0';
+      return Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+    
+    function obtenerNombreOrigen(origen) {
+      const nombres = {
+        'EG': 'Enf. General',
+        'AT': 'Acc. Trabajo',
+        'EP': 'Enf. Profesional',
+        'LM': 'Maternidad',
+        'LP': 'Paternidad'
+      };
+      return nombres[origen] || origen;
+    }
+    
+    function getBadgeClass(estado) {
+      if (!estado) return 'badge-info';
+      if (estado === 'Liquidar' || estado === 'Liquidación total') return 'badge-success';
+      if (estado === 'Corresponde a ARL') return 'badge-warning';
+      if (estado.includes('Sin reconocimiento') || estado.includes('Prescrita')) return 'badge-danger';
+      if (estado === 'Liquidación proporcional') return 'badge-info';
+      return 'badge-info';
+    }
+    
+    // Cargar configuración guardada
+    document.addEventListener('DOMContentLoaded', function() {
+      const configGuardada = localStorage.getItem('incapacidades_config');
+      if (configGuardada) {
+        const config = JSON.parse(configGuardada);
+        if (config.SMLV) {
+          document.getElementById('configSMLV2026').value = config.SMLV[2026] || 1750950;
+          document.getElementById('configSMLV2025').value = config.SMLV[2025] || 1423500;
+          document.getElementById('configSMLV2024').value = config.SMLV[2024] || 1300000;
+          document.getElementById('configSMLV2023').value = config.SMLV[2023] || 1116000;
+          
+          // Actualizar SMLV global
+          SMLV[2026] = config.SMLV[2026] || 1750950;
+          SMLV[2025] = config.SMLV[2025] || 1423500;
+          SMLV[2024] = config.SMLV[2024] || 1300000;
+          SMLV[2023] = config.SMLV[2023] || 1116000;
+        }
+        document.getElementById('configDiasPrescripcion').value = config.diasPrescripcion || 1080;
+        document.getElementById('configDiasRelacion').value = config.diasRelacion || 60;
+        document.getElementById('configPorcEG').value = config.porcentajeEG || 66.67;
+        document.getElementById('configEmail').value = config.email || 'admin@laki.com';
+      }
+    });
+  </script>
+</body>
+</html>
